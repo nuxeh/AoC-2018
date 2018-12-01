@@ -1,7 +1,3 @@
-BEGIN {
-    sum2 = 0
-}
-
 {
     sum += $1
     table[NR] = $1
