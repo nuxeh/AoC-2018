@@ -1,3 +1,7 @@
+BEGIN {
+    sum2 = 0
+}
+
 {
     sum += $1
     table[NR] = $1
@@ -11,11 +15,11 @@ END {
     while (1) {
         for (i in table) {
             sum2 += table[i]
-            freq[sum2] += 1
-        }
-        if (freq[sum2] >= 2) {
-            print sum2
-            exit
+            freq[sum2]++
+            if (freq[sum2] == 2) {
+                print sum2
+                exit
+            }
         }
     }
 }
