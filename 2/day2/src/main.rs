@@ -2,56 +2,11 @@ extern crate docopt;
 #[macro_use]
 extern crate serde_derive;
 
-use docopt::Docopt;
+mod config;
+use config::RuntimeArgs;
+
 use std::fs;
 use std::collections::HashMap;
-use std::path::PathBuf;
-
-const USAGE: &str = "
-Advent of code, day 2
-
-Usage:
-  do [options] [<input>]
-
-Options:
-  -h --help       Show this help message.
-  -v --verbose    Show extra information.
-  -t --test       Use test data
-";
-
-#[derive(Clone, Debug, Deserialize, Default)]
-pub struct CliArgs {
-    flag_verbose: bool,
-    flag_test: bool,
-    arg_input: Option<String>,
-}
-
-#[derive(Clone, Debug, Deserialize, Default)]
-pub struct RuntimeArgs {
-    cli_args: CliArgs,
-    input_file: PathBuf,
-}
-
-impl RuntimeArgs {
-    fn get() -> Self {
-        let mut args = RuntimeArgs::default();
-
-        args.cli_args = Docopt::new(USAGE)
-             .and_then(|d| d.deserialize())
-             .unwrap_or_else(|e| e.exit());
-
-        args.input_file = match args.cli_args.flag_test {
-            true => PathBuf::from("test.txt"),
-            false => PathBuf::from("input.txt")
-        };
-
-        if let Some(s) = args.clone().cli_args.arg_input {
-            args.input_file = PathBuf::from(s);
-        }
-
-        args
-    }
-}
 
 fn main() {
     let args = RuntimeArgs::get();
