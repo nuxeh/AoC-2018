@@ -10,7 +10,7 @@ const USAGE: &str = "
 Advent of code, day 2
 
 Usage:
-  ./do [options]
+  do [options] [<input>]
 
 Options:
   -h --help       Show this help message.
@@ -22,6 +22,7 @@ Options:
 pub struct Args {
     flag_verbose: bool,
     flag_test: bool,
+    arg_input: Option<String>,
 }
 
 fn main() {
@@ -30,10 +31,16 @@ fn main() {
                      .and_then(|d| d.deserialize())
                      .unwrap_or_else(|e| e.exit());
 
-    let file = match args.flag_test {
-        true => "test.txt",
-        false => "input.txt"
+    let mut file = match args.flag_test {
+        true => String::from("test.txt"),
+        false => String::from("input.txt")
     };
+
+    if let Some(s) = args.arg_input {
+        file = String::from(s);
+    }
+
+    println!("[info] processing {}", file);
 
     let input = fs::read_to_string(file).unwrap_or(String::new());
 
