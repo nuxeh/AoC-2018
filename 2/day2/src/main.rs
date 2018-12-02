@@ -5,6 +5,7 @@ extern crate serde_derive;
 use docopt::Docopt;
 use std::fs;
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 const USAGE: &str = "
 Advent of code, day 2
@@ -18,31 +19,46 @@ Options:
   -t --test       Use test data
 ";
 
-#[derive(Debug, Deserialize, Default)]
-pub struct Args {
+#[derive(Clone, Debug, Deserialize, Default)]
+pub struct CliArgs {
     flag_verbose: bool,
     flag_test: bool,
     arg_input: Option<String>,
 }
 
-fn main() {
+#[derive(Clone, Debug, Deserialize, Default)]
+pub struct RuntimeArgs {
+    cli_args: CliArgs,
+    input_file: PathBuf,
+}
 
-    let args: Args = Docopt::new(USAGE)
-         .and_then(|d| d.deserialize())
-         .unwrap_or_else(|e| e.exit());
+impl RuntimeArgs {
+    fn get() -> Self {
+        let mut args = RuntimeArgs::default();
 
-    let mut file = match args.flag_test {
-        true => String::from("test.txt"),
-        false => String::from("input.txt")
-    };
+        args.cli_args = Docopt::new(USAGE)
+             .and_then(|d| d.deserialize())
+             .unwrap_or_else(|e| e.exit());
 
-    if let Some(s) = args.arg_input {
-        file = String::from(s);
+        args.input_file = match args.cli_args.flag_test {
+            true => PathBuf::from("test.txt"),
+            false => PathBuf::from("input.txt")
+        };
+
+        if let Some(s) = args.clone().cli_args.arg_input {
+            args.input_file = PathBuf::from(s);
+        }
+
+        args
     }
+}
 
-    println!("[info] processing {}", file);
+fn main() {
+    let args = RuntimeArgs::get();
 
-    let input = fs::read_to_string(file).unwrap_or(String::new());
+    println!("[info] processing {}", args.input_file.display());
+
+    let input = fs::read_to_string(args.input_file).unwrap_or(String::new());
 
     let mut doubles = 0;
     let mut triples = 0;
