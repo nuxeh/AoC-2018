@@ -3,22 +3,17 @@ extern crate docopt;
 extern crate serde_derive;
 
 mod config;
-use config::RuntimeArgs;
+use config::AoCRuntimeData;
 
-use std::fs;
 use std::collections::HashMap;
 
 fn main() {
-    let args = RuntimeArgs::get();
-
-    println!("[info] processing {}", args.input_file.display());
-
-    let input = fs::read_to_string(args.input_file).unwrap_or(String::new());
+    let data = AoCRuntimeData::get();
 
     let mut doubles = 0;
     let mut triples = 0;
 
-    for line in input.lines() {
+    for line in data.string_data.lines() {
         let hist = line
             .chars()
             .fold(HashMap::new(), |mut hist: HashMap<char, u32>, a| {
@@ -45,11 +40,8 @@ fn main() {
     println!("doubles: {} triples: {}", doubles, triples);
     println!("checksum: {}", doubles * triples);
 
-    // get an array of strings for the input
-    let inputs: Vec<String> = input.lines().map(|a| String::from(a)).collect();
-
-    for l in inputs.clone() {
-        for k in inputs.clone() {
+    for l in data.vector_data.clone() {
+        for k in data.vector_data.clone() {
             let d = id_diff(&l, &k);
             if d == 1 {
                 println!("{} {} {}", d, l, k);

@@ -3,7 +3,7 @@ use std::fs;
 use std::path::PathBuf;
 
 const USAGE: &str = "
-Advent of code, day 2
+Advent of code, day {{day}}
 
 Usage:
   do [options] [<input>]
@@ -22,28 +22,42 @@ pub struct CliArgs {
 }
 
 #[derive(Clone, Debug, Deserialize, Default)]
-pub struct RuntimeArgs {
+pub struct AoCRuntimeData {
     pub cli_args: CliArgs,
     pub input_file: PathBuf,
+    pub string_data: String,
+    pub vector_data: Vec<String>,
 }
 
-impl RuntimeArgs {
+impl AoCRuntimeData {
     pub fn get() -> Self {
-        let mut args = RuntimeArgs::default();
+        let mut data = AoCRuntimeData::default();
 
-        args.cli_args = Docopt::new(USAGE)
+        data.cli_args = Docopt::new(USAGE)
              .and_then(|d| d.deserialize())
              .unwrap_or_else(|e| e.exit());
 
-        args.input_file = match args.cli_args.flag_test {
+        data.input_file = match data.cli_args.flag_test {
             true => PathBuf::from("test.txt"),
             false => PathBuf::from("input.txt")
         };
 
-        if let Some(s) = args.clone().cli_args.arg_input {
-            args.input_file = PathBuf::from(s);
+        if let Some(s) = data.clone().cli_args.arg_input {
+            data.input_file = PathBuf::from(s);
         }
 
-        args
+        data.load_data();
+
+        data
+    }
+
+    pub fn load_data(&mut self) {
+        let s = fs::read_to_string(&self.input_file).unwrap_or(String::new());
+
+        // set string data
+        self.string_data = s.clone();
+
+        // get an array of strings for the input
+        self.vector_data = s.lines().map(|a| String::from(a)).collect();
     }
 }
