@@ -73,4 +73,12 @@ fn main() {
 
     println!("doubles: {} triples: {}", doubles, triples);
     println!("checksum: {}", doubles * triples);
+
+    println!("{:?}", input);
+
+    // get an array of strings for the input
+    let inputs: Vec<String> = input.lines().map(|a| String::from(a)).collect();
+
+    println!("{:?}", inputs);
+
 }
