@@ -18,11 +18,17 @@ fn main() {
 
         println!("{:?}", hist);
 
-        let vals: Vec<u32> = hist
+        let mut vals: Vec<u32> = hist
             .values()
             .filter(|a| **a == 2 || **a == 3)
             .map(|a| *a)
             .collect();
+
+        println!("{:?}", vals);
+
+        vals.sort();
+        println!("{:?}", vals);
+        vals.dedup_by_key(|_| 1);
 
         println!("{:?}", vals);
     }
