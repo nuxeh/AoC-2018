@@ -74,11 +74,28 @@ fn main() {
     println!("doubles: {} triples: {}", doubles, triples);
     println!("checksum: {}", doubles * triples);
 
-    println!("{:?}", input);
-
     // get an array of strings for the input
     let inputs: Vec<String> = input.lines().map(|a| String::from(a)).collect();
 
-    println!("{:?}", inputs);
+    for l in inputs.clone() {
+        for k in inputs.clone() {
+            let d = id_diff(&l, &k);
+            if d == 1 {
+                println!("{} {} {}", d, l, k);
+            }
+        }
+    }
+}
 
+fn id_diff(a: &str, b: &str) -> u32 {
+    a
+        .chars()
+        .zip(b.chars())
+        .fold(0, |d, a| {
+            if a.0 != a.1 {
+                d + 1
+            } else {
+                d
+            }
+        })
 }
