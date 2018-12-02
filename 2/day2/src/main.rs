@@ -8,7 +8,7 @@ use config::AoCRuntimeData;
 use std::collections::HashMap;
 
 fn main() {
-    let data = AoCRuntimeData::get();
+    let data = AoCRuntimeData::get(2018, 2);
 
     let mut doubles = 0;
     let mut triples = 0;

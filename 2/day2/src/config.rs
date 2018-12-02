@@ -3,8 +3,6 @@ use std::fs;
 use std::path::PathBuf;
 
 const USAGE: &str = "
-Advent of code, day {{day}}
-
 Usage:
   do [options] [<input>]
 
@@ -31,10 +29,11 @@ pub struct AoCRuntimeData {
 }
 
 impl AoCRuntimeData {
-    pub fn get() -> Self {
+    pub fn get(year: u16, day: u8) -> Self {
         let mut data = AoCRuntimeData::default();
 
-        data.cli_args = Docopt::new(USAGE)
+        let usage = format!("Advent of code {}, day {}\n{}", year, day, USAGE);
+        data.cli_args = Docopt::new(usage)
              .and_then(|d| d.deserialize())
              .unwrap_or_else(|e| e.exit());
 
