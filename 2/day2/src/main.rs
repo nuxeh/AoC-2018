@@ -1,6 +1,8 @@
 extern crate docopt;
-use docopt::Docopt;
+#[macro_use]
+extern crate serde_derive;
 
+use docopt::Docopt;
 use std::fs;
 use std::collections::HashMap;
 
@@ -31,7 +33,7 @@ fn main() {
     let file = match args.flag_test {
         true => "test.txt",
         false => "input.txt"
-    }
+    };
 
     let input = fs::read_to_string(file).unwrap_or(String::new());
 
