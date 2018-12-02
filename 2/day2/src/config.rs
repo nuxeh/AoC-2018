@@ -27,6 +27,7 @@ pub struct AoCRuntimeData {
     pub input_file: PathBuf,
     pub string_data: String,
     pub vector_data: Vec<String>,
+    pub verbose: bool,
 }
 
 impl AoCRuntimeData {
@@ -45,6 +46,8 @@ impl AoCRuntimeData {
         if let Some(s) = data.clone().cli_args.arg_input {
             data.input_file = PathBuf::from(s);
         }
+
+        if data.cli_args.flag_verbose { data.verbose = true; }
 
         data.load_data();
 
