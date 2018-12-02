@@ -2,7 +2,11 @@ use std::fs;
 use std::collections::HashMap;
 
 fn main() {
-    let input = fs::read_to_string("test.txt").unwrap_or(String::new());
+    let input = fs::read_to_string("input.txt").unwrap_or(String::new());
+
+    let mut doubles = 0;
+    let mut triples = 0;
+
     for line in input.lines() {
         let hist = line
             .chars()
@@ -16,20 +20,17 @@ fn main() {
                 hist
             });
 
-        println!("{:?}", hist);
-
-        let mut vals: Vec<u32> = hist
+        let vals: Vec<u32> = hist
             .values()
             .filter(|a| **a == 2 || **a == 3)
             .map(|a| *a)
             .collect();
 
-        println!("{:?}", vals);
+        if vals.contains(&2) { doubles += 1; }
+        if vals.contains(&3) { triples += 1; }
 
-        vals.sort();
-        println!("{:?}", vals);
-        vals.dedup_by_key(|_| 1);
-
-        println!("{:?}", vals);
     }
+
+    println!("doubles: {} triples: {}", doubles, triples);
+    println!("checksum: {}", doubles * triples);
 }
