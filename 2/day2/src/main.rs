@@ -82,14 +82,14 @@ fn main() {
             let d = id_diff(&l, &k);
             if d == 1 {
                 println!("{} {} {}", d, l, k);
+                println!("{}", id_get_common(&l, &k));
             }
         }
     }
 }
 
 fn id_diff(a: &str, b: &str) -> u32 {
-    a
-        .chars()
+    a.chars()
         .zip(b.chars())
         .fold(0, |d, a| {
             if a.0 != a.1 {
@@ -97,5 +97,16 @@ fn id_diff(a: &str, b: &str) -> u32 {
             } else {
                 d
             }
+        })
+}
+
+fn id_get_common(a: &str, b: &str) -> String {
+    a.chars()
+        .zip(b.chars())
+        .fold(String::new(), |mut c, a| {
+            if a.0 == a.1 {
+                c.push(a.0);
+            }
+            c
         })
 }
