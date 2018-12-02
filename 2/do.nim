@@ -8,4 +8,5 @@ var
 
 if not isNil(file):
   while file.readLine(line):
-    echo line
+    for c in line.split(""):
+        echo c
