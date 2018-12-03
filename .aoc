@@ -1,1 +1,6 @@
 year = "2018"
+directory_format = "%d"
+
+[[template]]
+language = "rust"
+path = "templates/rust/"
