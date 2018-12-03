@@ -30,7 +30,7 @@ else:
 var
   file = newFileStream(filename, fmRead)
   line = ""
-  fabric: array[2000, array[2000, bool]]
+  fabric: array[2000, array[2000, int]]
   overlap = 0
 
 if not isNil(file):
@@ -48,9 +48,9 @@ if not isNil(file):
       while x < left + width:
         y = top
         while y < top + height:
-          if fabric[x][y]:
+          if fabric[x][y] == 1:
             overlap += 1
-          fabric[x][y] = true
+          fabric[x][y] += 1
           y += 1
         x += 1
 
@@ -71,7 +71,7 @@ if args["--test"]:
     x = 0
     while x < dim:
       var c = "."
-      if fabric[x][y]:
+      if fabric[x][y] > 0:
         c = "#"
       stdout.write c
       x += 1
