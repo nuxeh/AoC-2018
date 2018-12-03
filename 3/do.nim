@@ -59,8 +59,8 @@ if not isNil(file):
   file.close()
 
 for entry in data:
-  for x in entry.left..(entry.left + entry.width):
-    for y in entry.top..(entry.top + entry.height):
+  for x in entry.left..<(entry.left + entry.width):
+    for y in entry.top..<(entry.top + entry.height):
       if fabric[x][y] == 1:
         overlap += 1
       fabric[x][y] += 1
@@ -69,8 +69,8 @@ for entry in data:
   var
     clean = true
 
-  for x in entry.left..(entry.left + entry.width):
-    for y in entry.top..(entry.top + entry.height):
+  for x in entry.left..<(entry.left + entry.width):
+    for y in entry.top..<(entry.top + entry.height):
       if fabric[x][y] > 1:
         clean = false
 
@@ -78,21 +78,14 @@ for entry in data:
      clean_id = entry.id
      clean_area = entry.width * entry.height
 
-var
-  x = 0
-  y = 0
-
 if args["--test"]:
-  while y < dim:
-    x = 0
-    while x < dim:
+  for y in 0..<dim:
+    for x in 0..<dim:
       var c = "."
       if fabric[x][y] > 0:
         c = "#"
       stdout.write c
-      x += 1
     stdout.write "\n"
-    y += 1
 
 echo $overlap
 echo $clean_id & " area: " & $clean_area
