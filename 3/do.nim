@@ -33,6 +33,7 @@ var
   fabric: array[5000, array[5000, int]]
   overlap = 0
   clean_id = -1
+  clean_area = 0
 
 if not isNil(file):
   while file.readLine(line):
@@ -60,6 +61,7 @@ if not isNil(file):
 
       if clean:
          clean_id = parseInt(matches[0])
+         clean_area = width * height
 
 #    for x in range[left..(left+width)]:
 #      for y in range[top..(top+height)]:
@@ -88,4 +90,4 @@ if args["--test"]:
     y += 1
 
 echo $overlap
-echo $clean_id
+echo $clean_id & " area: " & $clean_area
