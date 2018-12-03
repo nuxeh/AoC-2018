@@ -32,6 +32,8 @@ var
   line = ""
   fabric: array[2000, array[2000, int]]
   overlap = 0
+  overlap_last = 0
+  clean = -1
 
 if not isNil(file):
   while file.readLine(line):
@@ -45,6 +47,8 @@ if not isNil(file):
         x = left
         y = top
 
+      overlap_last = overlap
+
       while x < left + width:
         y = top
         while y < top + height:
@@ -53,6 +57,9 @@ if not isNil(file):
           fabric[x][y] += 1
           y += 1
         x += 1
+
+      if overlap == overlap_last:
+         clean = parseInt(matches[0])
 
 #    for x in range[left..(left+width)]:
 #      for y in range[top..(top+height)]:
@@ -81,3 +88,4 @@ if args["--test"]:
     y += 1
 
 echo $overlap
+echo $clean
