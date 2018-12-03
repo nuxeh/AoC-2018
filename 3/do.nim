@@ -60,6 +60,8 @@ if not isNil(file):
 #          overlap++
 #        fabric[x][y] = true
 
+# TODO: ranges/for loops?!
+
   file.close()
 
 var
