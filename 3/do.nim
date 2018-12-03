@@ -61,17 +61,28 @@ if not isNil(file):
 for entry in data:
   var
     x = entry.left
+    y: int
+
+  while x < entry.left + entry.width:
     y = entry.top
+    while y < entry.top + entry.height:
+      if fabric[x][y] == 1:
+        overlap += 1
+      fabric[x][y] += 1
+      y += 1
+    x += 1
+
+for entry in data:
+  var
+    x = entry.left
+    y: int
     clean = true
 
   while x < entry.left + entry.width:
     y = entry.top
     while y < entry.top + entry.height:
-      if fabric[x][y] > 0:
+      if fabric[x][y] > 1:
         clean = false
-      if fabric[x][y] == 1:
-        overlap += 1
-      fabric[x][y] += 1
       y += 1
     x += 1
 
