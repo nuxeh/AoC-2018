@@ -30,7 +30,7 @@ else:
 var
   file = newFileStream(filename, fmRead)
   line = ""
-  fabric: array[2000, array[2000, int]]
+  fabric: array[5000, array[5000, int]]
   overlap = 0
   clean_id = -1
 
@@ -50,7 +50,7 @@ if not isNil(file):
       while x < left + width:
         y = top
         while y < top + height:
-          if fabric[x][y] != 0:
+          if fabric[x][y] > 0:
             clean = false
           if fabric[x][y] == 1:
             overlap += 1
