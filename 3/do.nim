@@ -27,10 +27,16 @@ else:
 var
   file = newFileStream(filename, fmRead)
   line = ""
+  fabric: array[2000, array[2000, bool]]
 
 if not isNil(file):
   while file.readLine(line):
-    var tokens = splitWhitespace(line)
+    var
+      tokens = splitWhitespace(line)
+      top = tokens[2]
+      left = 0
+      width = 0
+      height = 0
     for t in tokens:
       echo $t
   file.close()
