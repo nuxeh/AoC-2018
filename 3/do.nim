@@ -59,44 +59,24 @@ if not isNil(file):
   file.close()
 
 for entry in data:
-  var
-    x = entry.left
-    y: int
-
-  while x < entry.left + entry.width:
-    y = entry.top
-    while y < entry.top + entry.height:
+  for x in entry.left..(entry.left + entry.width):
+    for y in entry.top..(entry.top + entry.height):
       if fabric[x][y] == 1:
         overlap += 1
       fabric[x][y] += 1
-      y += 1
-    x += 1
 
 for entry in data:
   var
-    x = entry.left
-    y: int
     clean = true
 
-  while x < entry.left + entry.width:
-    y = entry.top
-    while y < entry.top + entry.height:
+  for x in entry.left..(entry.left + entry.width):
+    for y in entry.top..(entry.top + entry.height):
       if fabric[x][y] > 1:
         clean = false
-      y += 1
-    x += 1
 
   if clean:
      clean_id = entry.id
      clean_area = entry.width * entry.height
-
-#    for x in range[left..(left+width)]:
-#      for y in range[top..(top+height)]:
-#        if fabric[x][y]:
-#          overlap++
-#        fabric[x][y] = true
-
-# TODO: ranges/for loops?!
 
 var
   x = 0
