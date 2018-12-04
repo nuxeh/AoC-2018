@@ -121,9 +121,14 @@ for e in data:
   elif (e.typ == 2): # falls asleep
     start_time = e.minute
 
+var longest_asleep = -1
+
 # print times asleep
 echo "total times asleep:"
 for k, t in sleep_totals:
   echo $k & ": " & $t
 
-  #echo $e
+  if t > longest_asleep:
+    longest_asleep = k
+
+echo "longest asleep: " & $longest_asleep
