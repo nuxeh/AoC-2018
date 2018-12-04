@@ -94,6 +94,7 @@ echo len(data)
 
 var
   guard_timeline: array[60, int]
+  sleep_totals = initTable[int, int]()
   start_time = 0
 
 for e in data:
@@ -113,7 +114,18 @@ for e in data:
         stdout.write "#"
     stdout.write "\n"
 
+    # update sleep count
+    if hasKey(sleep_totals, e.id):
+      sleep_totals[e.id] += e.minute - start_time
+    else:
+      sleep_totals[e.id] = 0
+
   elif (e.typ == 2): # falls asleep
     start_time = e.minute
+
+# print times asleep
+echo "total times asleep:"
+for k, t in sleep_totals:
+  echo $k & ": " & $t
 
   #echo $e
