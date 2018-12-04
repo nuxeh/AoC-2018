@@ -154,3 +154,20 @@ for i, m in timeline[guard_longest_asleep]:
 echo "longest minute: " & $longest_minute_n
 
 echo "result: " & $(guard_longest_asleep * longest_minute_n)
+
+var
+  longest = -1
+  guard_asleep = -1
+  minute_asleep = -1
+
+# get most commonly asleep minute
+for guard, tl in timeline:
+  for i, m in tl:
+    if m > longest:
+      longest = m
+      guard_asleep = guard
+      minute_asleep = i
+
+echo "result: " & $(guard_asleep * minute_asleep)
+
+# max by value for arrays
