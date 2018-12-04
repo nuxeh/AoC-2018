@@ -171,3 +171,11 @@ for guard, tl in timeline:
 echo "result: " & $(guard_asleep * minute_asleep)
 
 # max by value for arrays
+#[
+[08:06:21] <edcragg> hi, is there any convenience function to get the item in a table (or array even) by maximum value? i've been looking around but i can't see one
+[08:18:14] <FromGitter> <mratsim> in countTable there should be a max
+[08:18:40] <FromGitter> <mratsim> https://nim-lang.org/docs/tables.html#largest%2CCountTableRef%5BA%5D
+[08:19:41] <FromGitter> <mratsim> otherwise fold(low(T), max(a, b), yourseq) don’t remember the parameter orders
+[08:20:29] <FromGitter> <mratsim> yourseq.fold(max(a, b), low(YourType))
+[08:20:48] <FromGitter> <mratsim> foldl*
+]#
