@@ -33,12 +33,16 @@ type
     hour: int,
     minute: int,
     id: int,
+    typ: int,
   ]
 
 var
   file = newFileStream(filename, fmRead)
   line = ""
   data = newSeq[Entry]()
+
+var
+  timeline = newSeq[array[60, int]]() # 60 -> 12:00
 
 # [1518-11-01 00:00] Guard #10 begins shift
 # [1518-11-01 00:05] falls asleep
@@ -59,6 +63,7 @@ if not isNil(file):
       entry.hour = parseInt(matches[3])
       entry.minute = parseInt(matches[4])
       entry.id = parseInt(matches[5])
+      entry.typ = 0
       current_id = parseInt(matches[5])
 
     #                      0      1      2     3     4
@@ -68,6 +73,7 @@ if not isNil(file):
       entry.day = parseInt(matches[2])
       entry.hour = parseInt(matches[3])
       entry.minute = parseInt(matches[4])
+      entry.typ = 1
       entry.id = current_id
 
     #                      0      1      2     3     4
@@ -77,6 +83,7 @@ if not isNil(file):
       entry.day = parseInt(matches[2])
       entry.hour = parseInt(matches[3])
       entry.minute = parseInt(matches[4])
+      entry.typ = 2
       entry.id = current_id
 
     data.add(entry)
@@ -84,5 +91,28 @@ if not isNil(file):
   file.close()
 
 echo len(data)
-for entry in data:
-  echo $entry
+
+var
+  guard_timeline: array[60, int]
+  start_time = 0
+
+for e in data:
+  if (e.typ == 0): # starts
+    for i in 0..59:
+      guard_timeline[i] = 0
+
+  elif (e.typ == 1): # wakes up
+    for i in start_time..<e.minute:
+      guard_timeline[i] += 1
+
+  elif (e.typ == 2): # falls asleep
+    start_time = e.minute
+
+  for i in 0..59:
+    if guard_timeline[i] == 0:
+      stdout.write " "
+    else:
+      stdout.write "#"
+  stdout.write "\n"
+
+  #echo $e
