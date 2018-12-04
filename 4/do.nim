@@ -115,10 +115,8 @@ for e in data:
     stdout.write "\n"
 
     # update sleep count
-    if hasKey(sleep_totals, e.id):
+    if hasKeyOrPut(sleep_totals, e.id, 0):
       sleep_totals[e.id] += e.minute - start_time
-    else:
-      sleep_totals[e.id] = 0
 
   elif (e.typ == 2): # falls asleep
     start_time = e.minute
