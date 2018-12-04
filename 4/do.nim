@@ -105,14 +105,15 @@ for e in data:
     for i in start_time..<e.minute:
       guard_timeline[i] += 1
 
+    # print
+    for i in 0..59:
+      if guard_timeline[i] == 0:
+        stdout.write " "
+      else:
+        stdout.write "#"
+    stdout.write "\n"
+
   elif (e.typ == 2): # falls asleep
     start_time = e.minute
-
-  for i in 0..59:
-    if guard_timeline[i] == 0:
-      stdout.write " "
-    else:
-      stdout.write "#"
-  stdout.write "\n"
 
   #echo $e
