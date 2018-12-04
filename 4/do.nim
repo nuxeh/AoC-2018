@@ -41,9 +41,6 @@ var
   line = ""
   data = newSeq[Entry]()
 
-var
-  timeline = newSeq[array[60, int]]() # 60 -> 12:00
-
 # [1518-11-01 00:00] Guard #10 begins shift
 # [1518-11-01 00:05] falls asleep
 # [1518-11-01 00:25] wakes up
@@ -96,15 +93,22 @@ var
   guard_timeline: array[60, int]
   sleep_totals = initTable[int, int]()
   start_time = 0
+  timeline = initTable[int, array[60, int]]()
+
+var
+  new_array: array[60, int]
 
 for e in data:
   if (e.typ == 0): # starts
     for i in 0..59:
       guard_timeline[i] = 0
 
+
   elif (e.typ == 1): # wakes up
     for i in start_time..<e.minute:
       guard_timeline[i] += 1
+      if hasKeyOrPut(timeline, e.id, new_array):
+        timeline[e.id][i] += 1
 
     # print
     for i in 0..59:
@@ -121,7 +125,11 @@ for e in data:
   elif (e.typ == 2): # falls asleep
     start_time = e.minute
 
-var longest_asleep = -1
+var
+  longest_asleep = -1
+  guard_longest_asleep = -1
+  longest_minute = -1
+  longest_minute_n = -1
 
 # print times asleep
 echo "total times asleep:"
@@ -129,6 +137,20 @@ for k, t in sleep_totals:
   echo $k & ": " & $t
 
   if t > longest_asleep:
-    longest_asleep = k
+    longest_asleep = t
+    guard_longest_asleep = k
 
-echo "longest asleep: " & $longest_asleep
+echo "guard longest asleep: " & $guard_longest_asleep
+
+for k, m in timeline:
+  echo $k & ": " & $m
+
+# get minute longest asleep
+for i, m in timeline[guard_longest_asleep]:
+  if m > longest_minute:
+    longest_minute = m
+    longest_minute_n = i
+
+echo "longest minute: " & $longest_minute_n
+
+echo "result: " & $(guard_longest_asleep * longest_minute_n)
