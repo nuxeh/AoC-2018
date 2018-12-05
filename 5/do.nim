@@ -90,3 +90,5 @@ for entry in data:
     #if args["--test"]:
      # echo str
     echo a & " " & $l
+
+# TODO: stack?
