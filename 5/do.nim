@@ -55,6 +55,7 @@ if not isNil(file):
   file.close()
 
 for entry in data:
+  # part 1
   var
     str = entry
     l = 0
@@ -68,3 +69,19 @@ for entry in data:
 
   echo str
   echo $l
+
+for entry in data:
+  # part 2
+  for a in zippedAlpha:
+    var
+      str = entry
+      l = 0
+      ol = -1
+
+    while ol != l:
+      ol = l
+      str = str.replace(a)
+      l = len(str)
+
+    echo str
+    echo a & " " & $l
