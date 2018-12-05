@@ -67,21 +67,26 @@ for entry in data:
       str = str.replace(a)
       l = len(str)
 
-  echo str
+  #echo str
   echo $l
 
 for entry in data:
   # part 2
-  for a in zippedAlpha:
+  for a in alphaSeq:
     var
       str = entry
       l = 0
       ol = -1
 
+    str = str.replace($a)
+    str = str.replace(toUpperAscii($a))
+
     while ol != l:
       ol = l
-      str = str.replace(a)
-      l = len(str)
+      for a in zippedAlpha:
+        str = str.replace(a)
+        l = len(str)
 
-    echo str
+    #if args["--test"]:
+     # echo str
     echo a & " " & $l
