@@ -23,16 +23,14 @@ import sequtils
 # A sequence:
 let alphaSeq = toSeq 'a'..'z'
 let alphaSeqUpper = toSeq 'A'..'Z'
-echo alphaSeq
-echo alphaSeqUpper
 #let zippedAlpha1 = zip(alphaSeq, alphaSeqUpper).map(proc(x: (string,string)): echo $x)
 
-var zippedAlpha = newSeq[string]()
+var zippedAlpha: array[52, string]
 for i, a in alphaSeq:
-  zippedAlpha.add(a & alphaSeqUpper[i])
+  zippedAlpha[i * 2] = a & alphaSeqUpper[i]
+  zippedAlpha[(i * 2) + 1] = alphaSeqUpper[i] & a
 
 echo $zippedAlpha
-
 
 var
   filename = ""
@@ -57,10 +55,16 @@ if not isNil(file):
   file.close()
 
 for entry in data:
-  var str = entry
-  #while true:
-  str = str.gsub("aA", "")
-  str = str.gsub("cC", "")
-  echo $str
-  echo $entry
+  var
+    str = entry
+    l = 0
+    ol = -1
 
+  while ol != l:
+    ol = l
+    for a in zippedAlpha:
+      str = str.replace(a)
+      l = len(str)
+
+  echo str
+  echo $l
