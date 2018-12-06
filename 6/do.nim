@@ -65,16 +65,14 @@ proc manhattan_distance(a: Point, b: Point): int =
 for y in (-2 * ymax)..(2 * ymax):
   for x in (-2 * xmax)..(2 * xmax):
     var
-      distances = initTable[int, int]()
+      distances = initCountTable[int]()
 
-    for i, p in data:
-      var
-        d = p.manhattan_distance((x, y))
-      if distances.hasKeyOrPut(d, 0):
-        inc(distances[d])
+    for p in data:
+      distances.inc(manhattan_distance(p, (x, y)))
 
-    #if distabnces.foldl(max(a, b))
+    if largest(distances).val > 1:
+      stdout.write largest(distances).val
+    else:
+      stdout.write '.'
 
-
-    stdout.write '.'
   stdout.write '\n'
