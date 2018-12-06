@@ -83,7 +83,7 @@ for y in (-2 * ymax)..(2 * ymax):
 
     if point:
       stdout.write '*'
-    elif dist_freq[shortest] > 1:
+    elif dist_freq[shortest] == 1:
       stdout.write smallest(distances).key
     else:
       stdout.write '.'
