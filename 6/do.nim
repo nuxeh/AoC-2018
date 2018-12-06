@@ -66,11 +66,16 @@ for y in (-2 * ymax)..(2 * ymax):
   for x in (-2 * xmax)..(2 * xmax):
     var
       distances = initCountTable[int]()
+      point = false
 
     for p in data:
       distances.inc(manhattan_distance(p, (x, y)))
+      if (x, y) == p:
+        point = true
 
-    if largest(distances).val > 1:
+    if point:
+      stdout.write '*'
+    elif largest(distances).val > 1:
       stdout.write largest(distances).val
     else:
       stdout.write '.'
