@@ -52,7 +52,7 @@ var
   xmin = data.foldl(min(a, b.x), 0)
   ymax = data.foldl(max(a, b.y), 0)
   ymin = data.foldl(min(a, b.y), 0)
-  all_values = newSeq[int]()
+  all_values = initCountTable[int]()
 
 echo "x max: " & $xmax & " x min: " & $xmin & " y max: " & $ymax & " y min: " & $ymin
 
@@ -90,12 +90,14 @@ for y in (-2 * ymax)..(2 * ymax):
       stdout.write '*'
     elif dist_freq[shortest] == 1:
       stdout.write shortest_key
-      all_values.add(shortest_key)
+      all_values.inc(shortest_key)
     else:
       stdout.write '.'
 
   stdout.write '\n'
 
-#sort(all_values)
+var smallest_area = smallest(all_values).val
+
+echo $smallest_area
 
 # https://forum.nim-lang.org/t/3432
