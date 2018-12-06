@@ -66,20 +66,28 @@ for y in (-2 * ymax)..(2 * ymax):
   for x in (-2 * xmax)..(2 * xmax):
     var
       distances = initCountTable[int]()
+      dist_freq = initCountTable[int]()
       point = false
+      shortest = 0
 
     for i, p in data:
-      distances.inc(i, manhattan_distance(p, (x, y)))
       if (x, y) == p:
         point = true
+      else:
+        var d = p.manhattan_distance((x, y))
+        distances.inc(i, d)
+        dist_freq.inc(d)
 
     #echo $distances
+    shortest = smallest(distances).val
 
     if point:
       stdout.write '*'
-    elif largest(distances).val > 1:
+    elif dist_freq[shortest] > 1:
       stdout.write smallest(distances).key
     else:
       stdout.write '.'
 
   stdout.write '\n'
+
+# https://forum.nim-lang.org/t/3432
