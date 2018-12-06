@@ -100,8 +100,11 @@ proc evaluate(ymax: int, xmax: int): CountTable[int] =
 
     result = all_values
 
-var areas1 = smallest(evaluate(ymax, xmax)).val
-var areas2 = smallest(evaluate(ymax * 2, xmax * 2)).val
+var areas1 = evaluate(ymax, xmax)
+var areas2 = evaluate(ymax * 2, xmax * 2)
+
+sort(areas1)
+sort(areas2)
 
 echo $areas1
 echo $areas2
