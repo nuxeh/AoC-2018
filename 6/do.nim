@@ -68,15 +68,17 @@ for y in (-2 * ymax)..(2 * ymax):
       distances = initCountTable[int]()
       point = false
 
-    for p in data:
-      distances.inc(manhattan_distance(p, (x, y)))
+    for i, p in data:
+      distances.inc(i, manhattan_distance(p, (x, y)))
       if (x, y) == p:
         point = true
+
+    #echo $distances
 
     if point:
       stdout.write '*'
     elif largest(distances).val > 1:
-      stdout.write largest(distances).val
+      stdout.write smallest(distances).key
     else:
       stdout.write '.'
 
