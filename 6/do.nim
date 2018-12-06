@@ -58,3 +58,7 @@ echo "x max: " & $xmax & " x min: " & $xmin & " y max: " & $ymax & " y min: " & 
 if args["--test"]:
   for entry in data:
     echo $entry
+
+for y in (-2 * ymax)..(2 * ymax):
+  for x in (-2 * xmax)..(2 * xmax):
+    echo $x & " " & $y
