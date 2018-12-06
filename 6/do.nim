@@ -116,9 +116,14 @@ echo $areas2
 #let zip = zip(areas1, areas2)
 #echo $zip
 
+var largest = 0
+
 for i, a in areas1:
   if a == areas2[i]:
     echo $i & " " & $a
+    largest = a
+
+echo $largest & " (" & $(largest + 1) & ")"
 
 
 # https://forum.nim-lang.org/t/3432
