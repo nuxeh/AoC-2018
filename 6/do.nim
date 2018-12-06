@@ -100,8 +100,10 @@ proc evaluate(ymax: int, xmax: int): CountTable[int] =
 
     result = all_values
 
-var smallest_area = smallest(evaluate(ymax, xmax)).val
+var areas1 = smallest(evaluate(ymax, xmax)).val
+var areas2 = smallest(evaluate(ymax * 2, xmax * 2)).val
 
-echo $smallest_area
+echo $areas1
+echo $areas2
 
 # https://forum.nim-lang.org/t/3432
