@@ -62,6 +62,10 @@ if args["--test"]:
 proc manhattan_distance(a: Point, b: Point): int =
   result = abs(a.x - b.x) + abs(a.y - b.y)
 
+proc write_s(s: string) =
+  if args["--test"]:
+    stdout.write s
+
 proc evaluate(ymax: int, xmax: int): CountTable[int] =
   var
     all_values = initCountTable[int]()
@@ -90,23 +94,32 @@ proc evaluate(ymax: int, xmax: int): CountTable[int] =
       shortest_key = smallest(distances).key
 
       if point:
-        stdout.write '*'
+        write_s "*"
       elif dist_freq[shortest] == 1:
-        stdout.write shortest_key
+        write_s $shortest_key
         all_values.inc(shortest_key)
       else:
-        stdout.write '.'
-    stdout.write '\n'
+        write_s "."
+    write_s "\n"
 
     result = all_values
 
 var areas1 = evaluate(ymax, xmax)
 var areas2 = evaluate(ymax * 2, xmax * 2)
 
-sort(areas1)
-sort(areas2)
+#sort(areas1)
+#sort(areas2)
 
 echo $areas1
 echo $areas2
 
+#let zip = zip(areas1, areas2)
+#echo $zip
+
+for i, a in areas1:
+  if a == areas2[i]:
+    echo $i & " " & $a
+
+
 # https://forum.nim-lang.org/t/3432
+# also, what's the deal with let?
