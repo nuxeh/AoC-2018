@@ -121,7 +121,8 @@ var largest = 0
 for i, a in areas1:
   if a == areas2[i]:
     echo $i & " " & $a
-    largest = a
+    if a > largest:
+      largest = a
 
 echo $largest & " (" & $(largest + 1) & ")"
 
