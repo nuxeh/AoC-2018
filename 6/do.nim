@@ -52,6 +52,7 @@ var
   xmin = data.foldl(min(a, b.x), 0)
   ymax = data.foldl(max(a, b.y), 0)
   ymin = data.foldl(min(a, b.y), 0)
+  all_values = newSeq[int]()
 
 echo "x max: " & $xmax & " x min: " & $xmin & " y max: " & $ymax & " y min: " & $ymin
 
@@ -69,6 +70,7 @@ for y in (-2 * ymax)..(2 * ymax):
       dist_freq = initCountTable[int]()
       point = false
       shortest = 0
+      shortest_key = 0
 
     for i, p in data:
       if (x, y) == p:
@@ -78,16 +80,22 @@ for y in (-2 * ymax)..(2 * ymax):
         distances.inc(i, d)
         dist_freq.inc(d)
 
-    #echo $distances
+    if args["--verbose"]:
+      echo $distances
+
     shortest = smallest(distances).val
+    shortest_key = smallest(distances).key
 
     if point:
       stdout.write '*'
     elif dist_freq[shortest] == 1:
-      stdout.write smallest(distances).key
+      stdout.write shortest_key
+      all_values.add(shortest_key)
     else:
       stdout.write '.'
 
   stdout.write '\n'
+
+#sort(all_values)
 
 # https://forum.nim-lang.org/t/3432
