@@ -70,8 +70,8 @@ proc evaluate(ymax: int, xmax: int): CountTable[int] =
   var
     all_values = initCountTable[int]()
 
-  for y in (-2 * ymax)..(2 * ymax):
-    for x in (-2 * xmax)..(2 * xmax):
+  for y in 0..ymax:
+    for x in 0..xmax:
       var
         distances = initCountTable[int]()
         dist_freq = initCountTable[int]()
@@ -105,7 +105,7 @@ proc evaluate(ymax: int, xmax: int): CountTable[int] =
     result = all_values
 
 var areas1 = evaluate(ymax, xmax)
-var areas2 = evaluate(ymax * 2, xmax * 2)
+var areas2 = evaluate(ymax + 1, xmax + 1)
 
 #sort(areas1)
 #sort(areas2)
