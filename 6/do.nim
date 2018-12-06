@@ -61,4 +61,5 @@ if args["--test"]:
 
 for y in (-2 * ymax)..(2 * ymax):
   for x in (-2 * xmax)..(2 * xmax):
-    echo $x & " " & $y
+    stdout.write '.'
+  stdout.write '\n'
