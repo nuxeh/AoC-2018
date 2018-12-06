@@ -15,6 +15,7 @@ import strutils
 import tables
 import terminal
 import re
+import sequtils
 
 var
   filename = ""
@@ -35,6 +36,8 @@ var
   file = newFileStream(filename, fmRead)
   line = ""
   data = newSeq[Point]()
+  x_max = 0
+  y_max = 0
 
 if not isNil(file):
   while file.readLine(line):
@@ -45,6 +48,18 @@ if not isNil(file):
       entry.y = parseInt(matches[1])
       data.add(entry)
   file.close()
+
+var
+  #xmax = 0
+  xmin = 0
+  #ymax = 0
+  ymin = 0
+  test = foldl(data, max(a.x, b.x), 0)
+
+echo ">" & $max(data[0].x, data[2].x)
+
+echo $test
+#ymax = data.foldl(max(a.x, b.x))
 
 for entry in data:
   echo $entry
