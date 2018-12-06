@@ -12,10 +12,10 @@ Options:
 import docopt
 import streams
 import strutils
+import sequtils
 import tables
 import terminal
 import re
-import sequtils
 
 var
   filename = ""
@@ -59,7 +59,22 @@ if args["--test"]:
   for entry in data:
     echo $entry
 
+proc manhattan_distance(a: Point, b: Point): int =
+  result = abs(a.x - b.x) + abs(a.y - b.y)
+
 for y in (-2 * ymax)..(2 * ymax):
   for x in (-2 * xmax)..(2 * xmax):
+    var
+      distances = initTable[int, int]()
+
+    for i, p in data:
+      var
+        d = p.manhattan_distance((x, y))
+      if distances.hasKeyOrPut(d, 0):
+        inc(distances[d])
+
+    #if distabnces.foldl(max(a, b))
+
+
     stdout.write '.'
   stdout.write '\n'
