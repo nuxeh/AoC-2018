@@ -52,7 +52,6 @@ var
   xmin = data.foldl(min(a, b.x), 0)
   ymax = data.foldl(max(a, b.y), 0)
   ymin = data.foldl(min(a, b.y), 0)
-  all_values = initCountTable[int]()
 
 echo "x max: " & $xmax & " x min: " & $xmin & " y max: " & $ymax & " y min: " & $ymin
 
@@ -63,40 +62,45 @@ if args["--test"]:
 proc manhattan_distance(a: Point, b: Point): int =
   result = abs(a.x - b.x) + abs(a.y - b.y)
 
-for y in (-2 * ymax)..(2 * ymax):
-  for x in (-2 * xmax)..(2 * xmax):
-    var
-      distances = initCountTable[int]()
-      dist_freq = initCountTable[int]()
-      point = false
-      shortest = 0
-      shortest_key = 0
+proc evaluate(ymax: int, xmax: int): CountTable[int] =
+  var
+    all_values = initCountTable[int]()
 
-    for i, p in data:
-      if (x, y) == p:
-        point = true
+  for y in (-2 * ymax)..(2 * ymax):
+    for x in (-2 * xmax)..(2 * xmax):
+      var
+        distances = initCountTable[int]()
+        dist_freq = initCountTable[int]()
+        point = false
+        shortest = 0
+        shortest_key = 0
+
+      for i, p in data:
+        if (x, y) == p:
+          point = true
+        else:
+          var d = p.manhattan_distance((x, y))
+          distances.inc(i, d)
+          dist_freq.inc(d)
+
+      if args["--verbose"]:
+        echo $distances
+
+      shortest = smallest(distances).val
+      shortest_key = smallest(distances).key
+
+      if point:
+        stdout.write '*'
+      elif dist_freq[shortest] == 1:
+        stdout.write shortest_key
+        all_values.inc(shortest_key)
       else:
-        var d = p.manhattan_distance((x, y))
-        distances.inc(i, d)
-        dist_freq.inc(d)
+        stdout.write '.'
+    stdout.write '\n'
 
-    if args["--verbose"]:
-      echo $distances
+    result = all_values
 
-    shortest = smallest(distances).val
-    shortest_key = smallest(distances).key
-
-    if point:
-      stdout.write '*'
-    elif dist_freq[shortest] == 1:
-      stdout.write shortest_key
-      all_values.inc(shortest_key)
-    else:
-      stdout.write '.'
-
-  stdout.write '\n'
-
-var smallest_area = smallest(all_values).val
+var smallest_area = smallest(evaluate(ymax, xmax)).val
 
 echo $smallest_area
 
