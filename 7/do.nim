@@ -41,11 +41,11 @@ let alpha = toSeq 'A'..'Z'
 
 if not isNil(file):
   while file.readLine(line):
-    var matches: array[5, string]
+    var matches: array[2, string]
     if match(line, re"^Step (.) must be finished before step (.) can begin.$", matches, 0):
       var entry: Entry
-      entry.id = alpha.find(cast[char](matches[1]))
-      entry.dep = alpha.find(cast[char](matches[0]))
+      entry.id = alpha.find(matches[1][0])
+      entry.dep = alpha.find(matches[0][0])
       data.add(entry)
   file.close()
 
