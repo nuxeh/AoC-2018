@@ -131,6 +131,13 @@ echo $largest & " (" & $(largest + 1) & ")"
 # https://forum.nim-lang.org/t/3432
 # also, what's the deal with let?
 
+var
+  safe_zone_area = 0
+  threshold = 32
+
+if not  args["--test"]:
+  threshold = 10000
+
 proc evaluate_part2(ymax: int, xmax: int) =
   for y in -ymax..ymax:
     for x in -xmax..xmax:
@@ -141,11 +148,13 @@ proc evaluate_part2(ymax: int, xmax: int) =
         var d = p.manhattan_distance((x, y))
         inc(total_distance, d)
 
-      if total_distance < 32:
+      if total_distance < threshold:
         write_s "#"
+        inc(safe_zone_area)
       else:
         write_s "."
 
     write_s "\n"
 
 evaluate_part2(ymax, xmax)
+echo $safe_zone_area
