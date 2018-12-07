@@ -70,8 +70,8 @@ proc evaluate(ymax: int, xmax: int): CountTable[int] =
   var
     all_values = initCountTable[int]()
 
-  for y in 0..ymax:
-    for x in 0..xmax:
+  for y in -ymax..ymax:
+    for x in -xmax..xmax:
       var
         distances = initCountTable[int]()
         dist_freq = initCountTable[int]()
@@ -81,6 +81,7 @@ proc evaluate(ymax: int, xmax: int): CountTable[int] =
 
       for i, p in data:
         if (x, y) == p:
+          all_values.inc(i)
           point = true
         else:
           var d = p.manhattan_distance((x, y))
@@ -120,7 +121,7 @@ var largest = 0
 
 for i, a in areas1:
   if a == areas2[i]:
-    echo $i & " " & $a
+    echo $i & " " & $a & " " & $areas2[i]
     if a > largest:
       largest = a
 
