@@ -130,3 +130,22 @@ echo $largest & " (" & $(largest + 1) & ")"
 
 # https://forum.nim-lang.org/t/3432
 # also, what's the deal with let?
+
+proc evaluate_part2(ymax: int, xmax: int) =
+  for y in -ymax..ymax:
+    for x in -xmax..xmax:
+      var
+        total_distance = 0
+
+      for i, p in data:
+        var d = p.manhattan_distance((x, y))
+        inc(total_distance, d)
+
+      if total_distance < 32:
+        write_s "#"
+      else:
+        write_s "."
+
+    write_s "\n"
+
+evaluate_part2(ymax, xmax)
