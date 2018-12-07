@@ -30,24 +30,36 @@ var
   file = newFileStream(filename, fmRead)
   line = ""
   data = initTable[char, char]()
+  tasks = newSeq[char]()
 
 let alpha = toSeq 'A'..'Z'
 
 if not isNil(file):
   while file.readLine(line):
-    var matches: array[2, string]
+    var
+      matches: array[2, string]
     if match(line, re"^Step (.) must be finished before step (.) can begin.$", matches, 0):
-      data[matches[1][0]] = matches[0][0]
+      var
+        task = matches[1][0]
+        dep = matches[0][0]
+      data[task] = dep
+
+      if tasks.find(task) == -1:
+        tasks.add(task)
+      if tasks.find(dep) == -1:
+        tasks.add(dep)
   file.close()
 
+echo $tasks
 echo $data
 
 proc find_root() =
   var
     ids = data
 
-  for k, t in data:
-    echo k & " " & t
+  for t in tasks:
+    echo $t
+    
 
   echo ids
   #result = smallest(ids)
