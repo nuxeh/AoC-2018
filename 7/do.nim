@@ -27,7 +27,7 @@ else:
   filename = "input.txt"
 
 type
-  Entry = tuple[
+  Task = tuple[
     id: int,
     dep: int,
   ]
@@ -35,7 +35,8 @@ type
 var
   file = newFileStream(filename, fmRead)
   line = ""
-  data = newSeq[Entry]()
+  data = newSeq[Task]()
+  stack = newSeq[Task]()
 
 let alpha = toSeq 'A'..'Z'
 
@@ -43,11 +44,24 @@ if not isNil(file):
   while file.readLine(line):
     var matches: array[2, string]
     if match(line, re"^Step (.) must be finished before step (.) can begin.$", matches, 0):
-      var entry: Entry
-      entry.id = alpha.find(matches[1][0])
-      entry.dep = alpha.find(matches[0][0])
+      var entry: Task
+      entry.id = alpha.find(matches[0][0])
+      entry.dep = alpha.find(matches[1][0])
       data.add(entry)
   file.close()
+
+proc find_root(d: seq[Task]) =
+  var
+    ids = toSeq 0..26
+
+  for t in d:
+    echo alpha[t.dep]
+    ids.delete(t.dep)
+
+  echo ids
+  #result = smallest(ids)
+
+find_root(data)
 
 for entry in data:
   echo $entry
