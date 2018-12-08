@@ -16,6 +16,7 @@ import tables
 import terminal
 import re
 import sequtils
+import sets
 
 var
   filename = ""
@@ -30,7 +31,7 @@ var
   file = newFileStream(filename, fmRead)
   line = ""
   deps = initTable[char, seq[char]]()
-  tasks = newSeq[char]()
+  tasks = initSet[char]() # <- use a set
 
 let alpha = toSeq 'A'..'Z'
 
@@ -46,23 +47,24 @@ if not isNil(file):
       discard deps.hasKeyOrPut(task, newSeq[char]())
       deps[task].add(dep)
 
-      if tasks.find(task) == -1:
-        tasks.add(task)
-      if tasks.find(dep) == -1:
-        tasks.add(dep)
+      # log all tasks seen
+      tasks.incl(task)
+      tasks.incl(dep)
   file.close()
 
 echo $tasks
 echo $deps
 
-proc find_root() =
+proc find_root(): char =
   for t in tasks:
     stdout.write $t
     if not deps.contains(t):
       stdout.write " *"
     stdout.write '\n'
+    result = t
 
-find_root()
+var
+  root = find_root()
 
 for k, entry in deps:
   echo $entry
