@@ -66,11 +66,11 @@ proc find_root(): char =
 var
   root = find_root()
 
-proc pop_dependency(done: char) =
-  for k, d in deps:
-    echo k & " " & $d
-    #if d.contains(done):
-      #echo "yes"
+proc pop_dependency(target: char) =
+  for t in tasks:
+    if deps.contains(t):
+      var d = deps[t].find(target)
+      echo t & " " & $d
 
 pop_dependency(root)
 
