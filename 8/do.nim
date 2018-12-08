@@ -28,12 +28,10 @@ else:
   filename = "input.txt"
 
 type
-  Entry = tuple[
-    id: int,
-    left: int,
-    top: int,
-    width: int,
-    height: int,
+  Packet = tuple[
+    num_children: int,
+    num_meta: int,
+    meta: seq[int],
   ]
 
 var
@@ -50,4 +48,13 @@ if not isNil(file):
 data = data_s.map(proc(s: string): int = parseInt(s))
 
 echo $data
+
+#[
+proc read_node(int: i): Packet =
+  meta = 
+  result = (num_children: i, num_meta: i + 1, meta: meta)
+
+var
+  nodes = newSeq[Packet]
+]#
 
