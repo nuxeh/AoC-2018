@@ -27,12 +27,16 @@ if args["--test"]:
 else:
   filename = "input.txt"
 
+if args["<input>"]:
+  filename = $args["<input>"]
+
 type
   Node = ref object
     children:seq[Node]
     packet: Packet
 
   Packet = object
+    id: int
     num_children: int
     num_meta: int
     meta: seq[int]
@@ -53,6 +57,8 @@ data = data_s.map(proc(s: string): int = parseInt(s))
 echo $data
 
 proc read_node(i: int): int =
+  echo $i
+
   var
     num_children = data[i]
     num_meta = data[i + 1]
@@ -60,16 +66,23 @@ proc read_node(i: int): int =
     packet_length = 0
     meta = newSeq[int]()
 
+  echo "meta " & $num_meta
+
   for j in 0..<num_children:
-    meta_offset = read_node(i + 2)
+    echo "j=" & $j
+    meta_offset += read_node(i + 2)
 
   for k in 0..<num_meta:
-    meta.add(data[i + 2 + meta_offset + k])
+    let offset = i + 2 + meta_offset + k
+    echo "k=" & $k & " (" & $offset & ")"
+    meta.add(data[offset])
+
+  echo "meta " & $num_meta
 
   packet_length = 2 + meta_offset + num_meta
 
-  let node = (num_children: i, num_meta: i + 1, meta: meta)
-  echo $node
+  let node = (id: i, num_children: num_children, num_meta: num_meta, meta: meta)
+  echo $node & " length=" & $packet_length
 
   result = packet_length
 
