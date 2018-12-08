@@ -36,7 +36,7 @@ type
     packet: Packet
 
   Packet = object
-    id: int
+    offset: int
     num_children: int
     num_meta: int
     meta: seq[int]
@@ -81,7 +81,7 @@ proc read_node(i: int): int =
 
   packet_length = 2 + meta_offset + num_meta
 
-  let node = (id: i, num_children: num_children, num_meta: num_meta, meta: meta)
+  let node = (offset: i, num_children: num_children, num_meta: num_meta, meta: meta)
   echo $node & " length=" & $packet_length
 
   result = packet_length
