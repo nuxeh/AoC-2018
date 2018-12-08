@@ -28,11 +28,14 @@ else:
   filename = "input.txt"
 
 type
-  Packet = tuple[
-    num_children: int,
-    num_meta: int,
-    meta: seq[int],
-  ]
+  Node = ref object
+    children:seq[Node]
+    packet: Packet
+
+  Packet = object
+    num_children: int
+    num_meta: int
+    meta: seq[int]
 
 var
   file = newFileStream(filename, fmRead)
@@ -49,12 +52,33 @@ data = data_s.map(proc(s: string): int = parseInt(s))
 
 echo $data
 
-#[
-proc read_node(int: i): Packet =
-  meta = 
-  result = (num_children: i, num_meta: i + 1, meta: meta)
+proc read_node(i: int): int =
+  var
+    num_children = data[i]
+    num_meta = data[i + 1]
+    meta_offset = 0
+    packet_length = 0
+    meta = newSeq[int]()
 
+  for j in 0..<num_children:
+    meta_offset = read_node(i + 2)
+
+  for k in 0..<num_meta:
+    meta.add(data[i + 2 + meta_offset + k])
+
+  packet_length = 2 + meta_offset + num_meta
+
+  let node = (num_children: i, num_meta: i + 1, meta: meta)
+  echo $node
+
+  result = packet_length
+
+echo len(data)
+echo read_node(0)
+
+#[
 var
   nodes = newSeq[Packet]
 ]#
+
 
