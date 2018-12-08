@@ -61,6 +61,7 @@ proc find_root(): char =
     if not deps.contains(t):
       stdout.write " *"
       result = t
+      break
     stdout.write '\n'
 
 var
@@ -71,22 +72,19 @@ proc print_deps() =
   for k, t in deps:
     echo k & " " & $t
 
-proc delete_all(task: char) =
-  for k, t in deps:
-    var d = t.find(task)
-    if d >= 0:
-      deps[k].delete(d)
-
 proc pop_dependency(target: char) =
   print_deps()
-  stack.add(target)
+  if not stack.contains(target):
+    stack.add(target)
   for t in tasks: # always in order
     if deps.contains(t):
-      var d = deps[t].find(target)
-      if d >= 0:
-        deps[t].delete(d)
-        #delete_all(target)
-        pop_dependency(t)
+      if deps[t].len() <= 1:
+        var d = deps[t].find(target)
+        if d >= 0:
+          deps[t].delete(d)
+          pop_dependency(t)
+
+echo root
 
 pop_dependency(root)
 echo $stack
