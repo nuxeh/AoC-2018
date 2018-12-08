@@ -29,7 +29,7 @@ else:
 var
   file = newFileStream(filename, fmRead)
   line = ""
-  data = initTable[char, char]()
+  deps = initTable[char, seq[char]]()
   tasks = newSeq[char]()
 
 let alpha = toSeq 'A'..'Z'
@@ -42,7 +42,9 @@ if not isNil(file):
       var
         task = matches[1][0]
         dep = matches[0][0]
-      data[task] = dep
+
+      discard deps.hasKeyOrPut(task, newSeq[char]())
+      deps[task].add(dep)
 
       if tasks.find(task) == -1:
         tasks.add(task)
@@ -51,11 +53,11 @@ if not isNil(file):
   file.close()
 
 echo $tasks
-echo $data
+echo $deps
 
 proc find_root() =
   var
-    ids = data
+    ids = deps
 
   for t in tasks:
     echo $t
@@ -66,5 +68,5 @@ proc find_root() =
 
 find_root()
 
-for k, entry in data:
+for k, entry in deps:
   echo $entry
