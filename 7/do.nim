@@ -65,13 +65,18 @@ proc find_root(): char =
 
 var
   root = find_root()
+  stack = newSeq[char]()
 
 proc pop_dependency(target: char) =
-  for t in tasks:
+  for t in tasks: # always in order
     if deps.contains(t):
       var d = deps[t].find(target)
-      echo t & " " & $d
+      if d >= 0:
+        deps[t].delete(d)
+        stack.add(target)
+        pop_dependency(t)
 
 pop_dependency(root)
+echo $stack
 
 echo $('C' > 'B')
