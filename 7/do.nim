@@ -60,11 +60,16 @@ proc find_root(): char =
     stdout.write $t
     if not deps.contains(t):
       stdout.write " *"
-    stdout.write '\n'
-    result = t
+      stdout.write '\n'
+      result = t
 
 var
   root = find_root()
 
-for k, entry in deps:
-  echo $entry
+proc pop_dependency(done: char) =
+  for k, d in deps:
+    echo k & " " & $d
+    if d.contains(done):
+      echo "yes"
+
+pop_dependency(root)
