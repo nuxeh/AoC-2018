@@ -56,15 +56,11 @@ echo $tasks
 echo $deps
 
 proc find_root() =
-  var
-    ids = deps
-
   for t in tasks:
-    echo $t
-    
-
-  echo ids
-  #result = smallest(ids)
+    stdout.write $t
+    if not deps.contains(t):
+      stdout.write " *"
+    stdout.write '\n'
 
 find_root()
 
