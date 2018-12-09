@@ -36,7 +36,7 @@ let args = docopt(doc, version = "0.1.0")
 
 if not args["--test"]:
   game.players = 419
-  game.last_score = 72164
+  game.last_score = 7216400
 else:
   var t = parseInt($args["--test"])
   if t < len(tests):
@@ -96,4 +96,67 @@ if args["--verbose"]:
   stdout.write '\n'
 
 echo $scores
-echo $largest(scores)
+#echo $largest(scores)
+
+echo "..."
+
+var
+  ring = initDoublyLinkedRing[int]()
+  curmarb = 0
+  curplayer = 0
+
+ring.prepend(0)
+ring.prepend(1)
+ring.prepend(2)
+ring.prepend(3)
+
+proc draw_ring() =
+  if args["--verbose"]:
+    stdout.write "[" & $curplayer & "] "
+    for node in nodes(ring):
+      if node.value == curmarb:
+        stdout.write " (" & $node.value & ") "
+      else:
+        stdout.write "  " & $node.value & "  "
+    stdout.write '\n'
+ 
+draw_ring()
+
+echo $ring
+
+
+
+var
+  added: ref DoublyLinkedNodeObj[int]
+
+for node in nodes(ring):
+  added = node
+  break
+
+for node in nodes(ring):
+  added = node
+  break
+
+for node in nodes(ring):
+  if node.value == curmarb:
+    added.prev = node
+    added.next = node.next
+    node.next = added
+    node.next.prev = added
+
+#ring.remove(added)
+
+echo $ring
+
+
+
+
+
+type
+  Node = ref object
+    next:Node
+    prev: Node
+    value: int
+
+
+
