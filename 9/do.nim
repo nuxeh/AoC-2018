@@ -108,7 +108,6 @@ var
 ring.prepend(0)
 ring.prepend(1)
 ring.prepend(2)
-ring.prepend(3)
 
 proc draw_ring() =
   if args["--verbose"]:
@@ -124,25 +123,25 @@ draw_ring()
 
 echo $ring
 
+proc insert_after(node, insert: ref DoublyLinkedNodeObj[int]) =
+  node.value = 777
+  insert.value = 888
 
+  insert.prev = node
+  insert.next = node.next
+  insert.next.prev = insert
+  node.next = insert
 
 var
   added: ref DoublyLinkedNodeObj[int]
 
-for node in nodes(ring):
-  added = node
+ring.prepend(3)
+for newnode in nodes(ring):
+  added = newnode
+  for curr in nodes(ring):
+    if curr.value == curmarb:
+      insert_after(curr, newnode)
   break
-
-for node in nodes(ring):
-  added = node
-  break
-
-for node in nodes(ring):
-  if node.value == curmarb:
-    added.prev = node
-    added.next = node.next
-    node.next = added
-    node.next.prev = added
 
 #ring.remove(added)
 
