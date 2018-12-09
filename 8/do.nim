@@ -57,7 +57,7 @@ data = data_s.map(proc(s: string): int = parseInt(s))
 
 echo $data
 
-proc read_node(i: int): int =
+proc read_node(i: int): (int, int) =
   echo $i
 
   var
@@ -66,18 +66,34 @@ proc read_node(i: int): int =
     meta_offset = 0
     packet_length = 0
     meta = newSeq[int]()
+    child_size = newSeq[int]()
+    value = 0
 
   echo "meta " & $num_meta
 
   for j in 0..<num_children:
+    var
+      sizes = read_node(i + 2 + meta_offset) # recurse
     echo "j=" & $j
-    meta_offset += read_node(i + 2 + meta_offset) # recurse
+    meta_offset += sizes[0]
+    child_size.add(sizes[1])
 
   for k in 0..<num_meta:
     let offset = i + 2 + meta_offset + k
     echo "k=" & $k & " (" & $offset & ")"
     meta.add(data[offset])
     total_meta += data[offset]
+
+  if num_children == 0 and len(meta) > 0:
+    value += meta.foldl(a + b)
+    echo "foldl: " & $value
+
+  for k in 0..<num_meta:
+    let
+      child_offset = k - 1
+
+    if child_offset < len(child_size) and child_offset >= 0:
+      value += child_size[child_offset]
 
   echo "meta " & $num_meta
 
@@ -86,10 +102,10 @@ proc read_node(i: int): int =
   let node = (offset: i, num_children: num_children, num_meta: num_meta, meta: meta)
   echo $node & " length=" & $packet_length
 
-  result = packet_length
+  result = (packet_length, value)
 
 echo len(data)
-echo read_node(0)
+echo $read_node(0)
 
 #[
 var
