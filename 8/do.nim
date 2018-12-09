@@ -46,6 +46,7 @@ var
   line = ""
   data_s = newSeq[string]()
   data = newSeq[int]()
+  total_meta = 0
 
 if not isNil(file):
   while file.readLine(line):
@@ -76,6 +77,7 @@ proc read_node(i: int): int =
     let offset = i + 2 + meta_offset + k
     echo "k=" & $k & " (" & $offset & ")"
     meta.add(data[offset])
+    total_meta += data[offset]
 
   echo "meta " & $num_meta
 
@@ -94,4 +96,4 @@ var
   nodes = newSeq[Packet]
 ]#
 
-
+echo $total_meta
