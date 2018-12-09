@@ -24,6 +24,7 @@ var
   tests = newSeq[spec]()
   game: spec
 
+tests.add((9, 10))
 tests.add((9, 25))
 tests.add((10, 1618))
 tests.add((13, 7999))
@@ -52,6 +53,28 @@ var
   table = initDoublyLinkedRing[int]()
 
 table.prepend(current_marble)
-echo $table
+current_marble += 1
 
 while current_marble < game.last_score:
+  var
+    i = 0
+    node_new: ref DoublyLinkedNodeObj[int]
+
+  stdout.write $current_player & " "
+  echo $table
+
+  table.prepend(current_marble)
+
+  for n in nodes(table):
+    if i == 0:
+      node_new = n
+    elif n.value == current_marble:
+      #insert_after(n, node_new)
+      node_new.prev = n.next
+      node_new.next = n.next.next
+      n.next.next.prev = node_new
+      n.next.next = node_new
+    i += 1
+
+  current_marble += 1
+  current_player = (current_player + 1) mod game.players
