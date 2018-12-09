@@ -90,17 +90,18 @@ proc read_node(i: int): (int, int) =
 
   for k in 0..<num_meta:
     let
-      child_offset = k - 1
+      child_offset = meta[k] - 1
 
     if child_offset < len(child_size) and child_offset >= 0:
       value += child_size[child_offset]
+      echo $child_offset
 
   echo "meta " & $num_meta
 
   packet_length = 2 + meta_offset + num_meta
 
   let node = (offset: i, num_children: num_children, num_meta: num_meta, meta: meta)
-  echo $node & " length=" & $packet_length
+  echo $node & " length=" & $packet_length & " value=" & $value
 
   result = (packet_length, value)
 
