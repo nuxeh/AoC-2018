@@ -70,7 +70,7 @@ proc read_node(i: int): int =
 
   for j in 0..<num_children:
     echo "j=" & $j
-    meta_offset += read_node(i + 2)
+    meta_offset += read_node(i + 2 + meta_offset) # recurse
 
   for k in 0..<num_meta:
     let offset = i + 2 + meta_offset + k
