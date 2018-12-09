@@ -51,32 +51,49 @@ var
   current_marble = 0
   current_player = 0
   table = initDoublyLinkedRing[int]()
+  sequence = newSeq[int]()
+  current_marble_index = 0
   current_node: ref DoublyLinkedNodeObj[int]
+  scores = initCountTable[int]()
 
 table.prepend(current_marble)
+sequence.insert(current_marble, 0)
 current_marble += 1
 
 while current_marble < game.last_score:
-  var
-    i = 0
-    node: ref DoublyLinkedNodeObj[int]
+  var insert_pos = (current_marble_index + 2) mod len(sequence)
 
-  stdout.write $current_player & " "
-  echo $table
+  if args["--verbose"]:
+    stdout.write "[" & $current_player & "] "
+    for i, s in sequence:
+      if i == current_marble_index:
+        stdout.write " (" & $s & ") "
+      else:
+        stdout.write "  " & $s & "  "
+    stdout.write '\n'
 
-  table.prepend(current_marble)
-
-  for n in nodes(table):
-    if i == 0:
-      for m in nodes(table):
-        if m.value == current_marble:
-          echo "inserting"
-          m.next.next.prev = n
-          m.next.next = n
-          node = m.next
-      n.prev = node
-      n.next = node.next
-    i += 1
+  if current_marble mod 23 == 0:
+    scores.inc(current_player, current_marble)
+    let seven_back = (current_marble_index + (len(sequence) - 7)) mod len(sequence)
+    insert_pos = seven_back
+    scores[current_player].inc(sequence[seven_back])
+    sequence.delete(seven_back)
+  else:
+    sequence.insert(current_marble, insert_pos)
 
   current_marble += 1
+  current_marble_index = insert_pos
   current_player = (current_player + 1) mod game.players
+
+
+if args["--verbose"]:
+  stdout.write "[" & $current_player & "] "
+  for i, s in sequence:
+   if i == current_marble_index:
+     stdout.write " (" & $s & ") "
+   else:
+     stdout.write "  " & $s & "  "
+  stdout.write '\n'
+
+echo $scores
+echo $largest(scores)
