@@ -9,14 +9,10 @@ Options:
   -v --verbose       Show extra information.
   -t=<n> --test=<n>  Use test data
 """
-import docopt
-import streams
+
 import strutils
-import tables
-import terminal
-import re
-import sequtils
-import sets
+import docopt
+import lists
 
 type
   spec = tuple [
@@ -28,6 +24,7 @@ var
   tests = newSeq[spec]()
   game: spec
 
+tests.add((9, 25))
 tests.add((10, 1618))
 tests.add((13, 7999))
 tests.add((17, 1104))
@@ -48,3 +45,13 @@ else:
     quit(1)
 
 echo $game
+
+var
+  current_marble = 0
+  current_player = 0
+  table = initDoublyLinkedRing[int]()
+
+table.prepend(current_marble)
+echo $table
+
+while current_marble < game.last_score:
