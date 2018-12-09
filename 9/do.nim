@@ -159,3 +159,4 @@ type
 
 
 # TODO: linked list in nim
+# TODO: linked list or alternative in rust
