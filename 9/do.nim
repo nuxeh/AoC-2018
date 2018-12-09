@@ -51,6 +51,7 @@ var
   current_marble = 0
   current_player = 0
   table = initDoublyLinkedRing[int]()
+  current_node: ref DoublyLinkedNodeObj[int]
 
 table.prepend(current_marble)
 current_marble += 1
@@ -58,7 +59,7 @@ current_marble += 1
 while current_marble < game.last_score:
   var
     i = 0
-    node_new: ref DoublyLinkedNodeObj[int]
+    node: ref DoublyLinkedNodeObj[int]
 
   stdout.write $current_player & " "
   echo $table
@@ -67,13 +68,14 @@ while current_marble < game.last_score:
 
   for n in nodes(table):
     if i == 0:
-      node_new = n
-    elif n.value == current_marble:
-      #insert_after(n, node_new)
-      node_new.prev = n.next
-      node_new.next = n.next.next
-      n.next.next.prev = node_new
-      n.next.next = node_new
+      for m in nodes(table):
+        if m.value == current_marble:
+          echo "inserting"
+          m.next.next.prev = n
+          m.next.next = n
+          node = m.next
+      n.prev = node
+      n.next = node.next
     i += 1
 
   current_marble += 1
