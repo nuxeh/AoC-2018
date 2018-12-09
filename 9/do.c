@@ -30,7 +30,7 @@ void draw(node_t *ring, node_t *current) {
 
 int main(void) {
     #if 1
-    max = 72164;
+    max = 7216400;
     players = 419;
     #define NODRAW
     #endif
