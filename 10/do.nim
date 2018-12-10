@@ -27,6 +27,9 @@ if args["--test"]:
 else:
   filename = "input.txt"
 
+if args["<input>"]:
+  filename = $args["<input>"]
+
 type
   Xy = tuple[
     x: int,
@@ -41,7 +44,7 @@ type
 
 type
   Space = tuple[
-    data: seq[int],
+    data: seq[Xy],
     dim: Xy,
   ]
 
@@ -75,18 +78,19 @@ proc tick(): Space =
   offset.x = -1 * min.x
   offset.y = -1 * min.y
 
-  for i in 0..<(space.dim.x * space.dim.y):
-    space.data.add(0)
-
   # create map data
   for p in points:
     var
       x = p.position.x + offset.x
       y = p.position.y + offset.y
+    space.data.add((x, y))
+
+#[
       index = (space.dim.x * y) + x
     #echo "x=" & $x & " y=" & $y & " index=" & $index
     if index < len(space.data):
       space.data[index] = 1
+]#
 
   # update positions
   for p in mitems(points):
@@ -100,14 +104,36 @@ proc draw(s: Space) =
   echo $s.dim & " size=" & $len(s.data)
   for y in 0..<s.dim.y:
     for x in 0..<s.dim.x:
-      #echo $((s.dim.x * y) + x)
-      if s.data[(s.dim.x * y) + x] > 0:
+      var p: Xy = (x, y)
+      if s.data.contains(p):
         stdout.write '#'
       else:
         stdout.write '.'
     stdout.write '\n'
 
+proc get_size(space: Space): int =
+  result = space.dim.x * space.dim.y
+
+#[
+discard tick()
+discard tick()
+discard tick()
 draw(tick())
-draw(tick())
-draw(tick())
-draw(tick())
+]#
+
+var
+  last_space = tick()
+  last_size = get_size(last_space)
+  run = true
+
+while run:
+  var
+    space = tick()
+    size = get_size(space)
+
+  if size > last_size:
+    run = false
+    draw(last_space)
+  else:
+    last_size = size
+    last_space = space
