@@ -125,6 +125,7 @@ var
   last_space = tick()
   last_size = get_size(last_space)
   run = true
+  seconds = 0
 
 while run:
   var
@@ -134,6 +135,9 @@ while run:
   if size > last_size:
     run = false
     draw(last_space)
+    echo $seconds
   else:
     last_size = size
     last_space = space
+
+  inc(seconds)
