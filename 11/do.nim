@@ -21,7 +21,6 @@ import sets
 var
   filename = ""
   input = 1309
-  grid: array[300, array[300, int]]
 
 let args = docopt(doc, version = "0.1.0")
 if args["--test"]:
@@ -40,32 +39,40 @@ proc calc(i, x, y: int): int =
 
   result = power_level
 
-for y in low(grid)..high(grid):
-  for x in low(grid[y])..high(grid[y]):
-    grid[x][y] = calc(input, x, y)
-
 echo $calc(8, 3, 5)
 echo $calc(57, 122, 79)
 echo $calc(39, 217, 196)
 echo $calc(71, 101, 153)
 
-proc evaluate(x, y: int): int =
+proc evaluate(grid: array[300, array[300, int]], x, y: int): int =
   var sum = 0
   for i in 0..2:
     for j in 0..1:
-      sum += grid[x+i][y+j]
+      sum += grid[y+i][x+j]
   result = sum
 
-var
-  largest: (int, int)
-  largest_val = 0
+proc go(i: int) =
+  var
+    grid: array[300, array[300, int]]
+    largest: (int, int)
+    largest_val = 0
+  
+  for y in low(grid)..high(grid):
+    for x in low(grid[y])..high(grid[y]):
+      grid[y][x] = calc(i, x, y)
 
-for y in low(grid)..(high(grid) - 2):
-  for x in low(grid[y])..(high(grid[y]) - 2):
-    var
-      v = evaluate(x, y)
-    if v > largest_val:
-      largest = (x + 1, y + 1)
-      largest_val = v
+  for y in low(grid)..(high(grid) - 2):
+    for x in low(grid[y])..(high(grid[y]) - 2):
+      var
+        v = evaluate(grid, x, y)
+      if v > largest_val:
+        largest = (x + 1, y + 1)
+        largest_val = v
 
-echo $largest & " -> " & $largest_val
+  echo "[" & $largest[1] & "," & $largest[0] & "] -> " & $largest_val
+
+go(18)
+go(42)
+
+
+
