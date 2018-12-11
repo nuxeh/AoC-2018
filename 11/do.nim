@@ -96,7 +96,7 @@ proc part2(ip: int) =
 
 #part2(18)
 #part2(42)
-part2(input)
+part2(input) # TODO: optimise this
 
 var grid = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
 
