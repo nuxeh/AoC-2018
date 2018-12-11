@@ -27,12 +27,12 @@ let args = docopt(doc, version = "0.1.0")
 if args["--test"]:
   input = 18
 
-proc calc(x, y: int): int =
+proc calc(i, x, y: int): int =
   var
     rack_id = x + 10
     power_level: int = rack_id * y
 
-  power_level += input
+  power_level += i
   power_level *= rack_id
   power_level = power_level div 100
   power_level = power_level mod 10
@@ -42,9 +42,15 @@ proc calc(x, y: int): int =
 
 for y in low(grid)..high(grid):
   for x in low(grid[y])..high(grid[y]):
-    grid[x][y] = calc(x, y)
+    grid[x][y] = calc(input, x, y)
 
 for y in low(grid)..high(grid):
   for x in low(grid[y])..high(grid[y]):
     stdout.write $grid[x][y] & " "
   stdout.write '\n'
+
+echo $calc(8, 3, 5)
+echo $calc(57, 122, 79)
+echo $calc(39, 217, 196)
+echo $calc(71, 101, 153)
+
