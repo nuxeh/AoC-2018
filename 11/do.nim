@@ -44,13 +44,6 @@ for y in low(grid)..high(grid):
   for x in low(grid[y])..high(grid[y]):
     grid[x][y] = calc(input, x, y)
 
-#[
-for y in low(grid)..high(grid):
-  for x in low(grid[y])..high(grid[y]):
-    stdout.write $grid[x][y] & " "
-  stdout.write '\n'
-]#
-
 echo $calc(8, 3, 5)
 echo $calc(57, 122, 79)
 echo $calc(39, 217, 196)
@@ -64,12 +57,15 @@ proc evaluate(x, y: int): int =
   result = sum
 
 var
-  counts = initCountTable[string]()
+  largest: (int, int)
+  largest_val = 0
 
 for y in low(grid)..(high(grid) - 2):
   for x in low(grid[y])..(high(grid[y]) - 2):
     var
-      key = $(x + 1) & "," & $(y + 1)
-    counts.inc(key, evaluate(x, y))
+      v = evaluate(x, y)
+    if v > largest_val:
+      largest = (x + 1, y + 1)
+      largest_val = v
 
-echo $largest(count).key & ": " &largest(count).val
+echo $largest & " -> " & $largest_val
