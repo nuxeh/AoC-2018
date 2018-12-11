@@ -44,36 +44,59 @@ echo $calc(57, 122, 79)
 echo $calc(39, 217, 196)
 echo $calc(71, 101, 153)
 
-proc evaluate(grid: array[300, array[300, int]], x, y: int): int =
+proc evaluate(grid: array[300, array[300, int]], x, y, s: int): int =
   var sum = 0
-  for i in 0..2:
-    for j in 0..2:
+  for i in 0..s-1:
+    for j in 0..s-1:
       sum += grid[y+i][x+j]
   result = sum
 
-proc go(i: int) =
+proc go(i, s: int): (int, (int, int, int)) =
   var
     grid: array[300, array[300, int]]
-    largest: (int, int)
+    largest: (int, int, int)
     largest_val = 0
   
   for y in low(grid)..high(grid):
     for x in low(grid[y])..high(grid[y]):
       grid[y][x] = calc(i, x, y)
 
-  for y in low(grid)..(high(grid) - 2):
-    for x in low(grid[y])..(high(grid[y]) - 2):
+  for y in low(grid)..(high(grid) - s - 1):
+    for x in low(grid[y])..(high(grid[y]) - s - 1):
       var
-        v = evaluate(grid, x, y)
+        v = evaluate(grid, x, y, s)
       if v > largest_val:
-        largest = (y, x)
+        largest = (y, x, s)
         largest_val = v
 
-  echo "[" & $largest[1] & "," & $largest[0] & "] -> " & $largest_val
+  #echo "[" & $largest[1] & "," & $largest[0] & "," & $largest[2] & "] -> " & $largest_val
+  result = (largest_val, largest)
 
-go(18)
-go(42)
-go(input)
+echo $go(18, 3)
+echo $go(42, 3)
+echo $go(input, 3) # part 1
+
+echo $go(18, 10)
+echo $go(42, 100)
+echo $go(42, 300)
+
+proc part2(ip: int) =
+  var
+    largest: (int, int, int)
+    largest_val = 0
+
+  for i in 1..300:
+    var
+      v = go(ip, i)
+    if v[0] > largest_val:
+      largest = v[1]
+      largest_val = v[0]
+
+  echo "[" & $largest[1] & "," & $largest[0] & "," & $largest[2] & "] -> " & $largest_val
+
+#part2(18)
+#part2(42)
+part2(input)
 
 var grid = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
 
