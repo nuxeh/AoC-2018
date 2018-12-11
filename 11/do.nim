@@ -47,7 +47,7 @@ echo $calc(71, 101, 153)
 proc evaluate(grid: array[300, array[300, int]], x, y: int): int =
   var sum = 0
   for i in 0..2:
-    for j in 0..1:
+    for j in 0..2:
       sum += grid[y+i][x+j]
   result = sum
 
@@ -66,13 +66,27 @@ proc go(i: int) =
       var
         v = evaluate(grid, x, y)
       if v > largest_val:
-        largest = (x + 1, y + 1)
+        largest = (y, x)
         largest_val = v
 
   echo "[" & $largest[1] & "," & $largest[0] & "] -> " & $largest_val
 
 go(18)
 go(42)
+go(input)
 
+var grid = [[1, 1, 1], [2, 2, 2], [3, 3, 3]]
 
+proc evaluate2(grid: array[3, array[3, int]], x, y: int): int =
+  var sum = 0
+  for i in 0..2:
+    for j in 0..2:
+      sum += grid[y+i][x+j]
+  result = sum
 
+for y in low(grid)..high(grid):
+  for x in low(grid[y])..high(grid[y]):
+    stdout.write $grid[y][x] & " "
+  stdout.write '\n'
+
+echo $evaluate2(grid, 0, 0)
