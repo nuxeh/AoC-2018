@@ -156,6 +156,7 @@ for i in 0..target_gen:
     echo "found repetition at generation=" & $gen
     break
   else:
+    echo "[" & $gen & "] " & $sum
     sums.add(sum)
 
 echo seq_to_str(pots)
