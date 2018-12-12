@@ -64,7 +64,7 @@ proc seq_to_str(s: seq[bool]): string =
     else:
       stri = stri & ' ';
   result = "[" & $gen & "] " & stri
-      
+
 if not isNil(file):
   while file.readLine(line):
     var
@@ -132,4 +132,13 @@ for i in 0..19:
   pots = tick(pots)
 
 echo seq_to_str(pots)
-    
+
+var total = 0
+for i, p in pots:
+  var
+    offset = gen * 4
+
+  if p == true:
+    total += i - offset
+
+echo $total
