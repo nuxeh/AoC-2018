@@ -137,13 +137,23 @@ if args["--part2"]:
   target_gen = (20 * 100) - 1
   #target_gen = 50000000000 - 1
 
+proc checksum2(pots_in: seq[bool]): int =
+  var
+    total = 0x55
+  for i, p in pots_in:
+    var
+      offset = gen * 4
+    if p == true:
+      total += 0x55 xor (i - offset)
+
+    result = total
+
 proc checksum(pots_in: seq[bool]): int =
   var
     total = 0
   for i, p in pots_in:
     var
       offset = gen * 4
-
     if p == true:
       total += i - offset
 
@@ -151,9 +161,10 @@ proc checksum(pots_in: seq[bool]): int =
 
 for i in 0..target_gen:
   pots = tick(pots)
-  var sum = checksum(pots)
+  var sum = checksum2(pots)
   if sums.contains(sum):
     echo "found repetition at generation=" & $gen
+    echo seq_to_str(pots)
     break
   else:
     echo "[" & $gen & "] " & $sum
