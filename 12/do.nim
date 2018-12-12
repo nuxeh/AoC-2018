@@ -88,13 +88,21 @@ for r in rules:
   echo $r
 
 echo seq_to_str(pots)
+
 for i, p in pots:
   for rule in rules:
+    var
+      match = true
+
     for j in -2..2:
       var
         offset = i + j
       if offset > low(pots) and offset < high(pots):
-        if pots[offset] == rule.pattern[j + 2]:
-          pots[i] = rule.outcome
+        if not pots[offset] == rule.pattern[j + 2]:
+          match = false
+
+    if match:
+      pots[i] = rule.outcome
+
 echo seq_to_str(pots)
     
