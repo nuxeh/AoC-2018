@@ -43,6 +43,7 @@ var
   rules = newSeq[Rule]()
   pots = newSeq[bool]()
 # pots = initDeque[bool]()
+  gen = 0
 
 proc str_to_seq(s: string): seq[bool] =
   var
@@ -62,7 +63,7 @@ proc seq_to_str(s: seq[bool]): string =
       stri = stri & '#';
     else:
       stri = stri & ' ';
-  result = stri
+  result = "[" & $gen & "] " & stri
       
 if not isNil(file):
   while file.readLine(line):
@@ -83,9 +84,11 @@ if not isNil(file):
 ]#
   file.close()
 
+#[
 echo $pots
 for r in rules:
   echo $r
+]#
 
 echo seq_to_str(pots)
 
@@ -102,9 +105,13 @@ for i, p in pots:
     for j in -2..2:
       var
         offset = i + j
+        pot_val = false
+
       if offset > low(pots) and offset < high(pots):
-        if not pots[offset] == rule.pattern[j + 2]:
-          match = false
+        pot_val = pots[offset]
+
+      if not pot_val == rule.pattern[j + 2]:
+        match = false
 
     if match:
       pots_new[i] = rule.outcome
