@@ -40,6 +40,7 @@ var
   file = newFileStream(filename, fmRead)
   line = ""
   rules = newSeq[Rule]()
+  pots: seq[bool]
 
 proc str_to_seq(s: string): seq[bool] =
   var
@@ -53,13 +54,18 @@ proc str_to_seq(s: string): seq[bool] =
       
 if not isNil(file):
   while file.readLine(line):
-    var matches: array[2, string]
+    var
+      matches: array[2, string]
+      matches2: string
     if match(line, re"^(.*) => (.)$", matches, 0):
       var entry: Rule
       entry.pattern = str_to_seq(matches[0])
       entry.outcome = str_to_seq(matches[1])[0]
       rules.add(entry)
+    if match(line, re"^initial state: (.*)$", matches, 0):
+      pots = str_to_seq(matches[0])
   file.close()
 
+echo $pots
 for r in rules:
   echo $r
