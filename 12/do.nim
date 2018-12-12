@@ -130,7 +130,6 @@ proc tick(pots_in: seq[bool]): seq[bool] =
   result = pots_new
 
 var
-  total = 0
   target_gen: int64 = 19
 
 if args["--part2"]:
@@ -141,11 +140,16 @@ for i in 0..target_gen:
 
 echo seq_to_str(pots)
 
-for i, p in pots:
+proc checksum(pots_in: seq[bool]): int =
   var
-    offset = gen * 4
+    total = 0
+  for i, p in pots_in:
+    var
+      offset = gen * 4
 
-  if p == true:
-    total += i - offset
+    if p == true:
+      total += i - offset
 
-echo $total
+    result = total
+
+echo $checksum(pots)
