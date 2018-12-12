@@ -92,11 +92,11 @@ for r in rules:
 
 echo seq_to_str(pots)
 
-proc tick(): seq[bool] =
+proc tick(pots_in: seq[bool]): seq[bool] =
   var
     pots_new = newSeq[bool]()
 
-  for i in (low(pots) - 4)..(high(pots) + 4):
+  for i in (low(pots_in) - 4)..(high(pots_in) + 4):
     var
       match = true
       outcome = false
@@ -109,8 +109,8 @@ proc tick(): seq[bool] =
           offset = i + j
           pot_val = false
 
-        if offset >= low(pots) and offset <= high(pots):
-          pot_val = pots[offset]
+        if offset >= low(pots_in) and offset <= high(pots_in):
+          pot_val = pots_in[offset]
 
         if not pot_val == rule.pattern[j + 2]:
           match = false
@@ -125,7 +125,11 @@ proc tick(): seq[bool] =
     else:
       pots_new.add(false)
 
+  inc(gen)
   result = pots_new
 
-echo seq_to_str(tick())
+for i in 0..19:
+  pots = tick(pots)
+
+echo seq_to_str(pots)
     
