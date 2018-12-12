@@ -41,7 +41,8 @@ var
   file = newFileStream(filename, fmRead)
   line = ""
   rules = newSeq[Rule]()
-  pots = initDeque[bool]()
+  pots = newSeq[bool]()
+# pots = initDeque[bool]()
 
 proc str_to_seq(s: string): seq[bool] =
   var
@@ -52,6 +53,16 @@ proc str_to_seq(s: string): seq[bool] =
     else:
       sequ.add(false);
   result = sequ
+
+proc seq_to_str(s: seq[bool]): string =
+  var
+    stri = ""
+  for ch in s:
+    if ch == true:
+      stri = stri & '#';
+    else:
+      stri = stri & ' ';
+  result = stri
       
 if not isNil(file):
   while file.readLine(line):
@@ -65,10 +76,25 @@ if not isNil(file):
       rules.add(entry)
     if match(line, re"^initial state: (.*)$", matches, 0):
       var pots_seq = str_to_seq(matches[0])
+      pots = pots_seq
+#[
       for p in pots_seq:
         pots.addLast(p)
+]#
   file.close()
 
 echo $pots
 for r in rules:
   echo $r
+
+echo seq_to_str(pots)
+for i, p in pots:
+  for rule in rules:
+    for j in -2..2:
+      var
+        offset = i + j
+      if offset > low(pots) and offset < high(pots):
+        if pots[offset] == rule.pattern[j + 2]:
+          pots[i] = rule.outcome
+echo seq_to_str(pots)
+    
