@@ -89,7 +89,12 @@ for r in rules:
 
 echo seq_to_str(pots)
 
+var
+  pots_new = newSeq[bool]()
+
 for i, p in pots:
+  pots_new.add(false)
+
   for rule in rules:
     var
       match = true
@@ -102,7 +107,7 @@ for i, p in pots:
           match = false
 
     if match:
-      pots[i] = rule.outcome
+      pots_new[i] = rule.outcome
 
-echo seq_to_str(pots)
+echo seq_to_str(pots_new)
     
