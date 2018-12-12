@@ -92,37 +92,40 @@ for r in rules:
 
 echo seq_to_str(pots)
 
-var
-  pots_new = newSeq[bool]()
-
-for i in (low(pots) - 4)..(high(pots) + 4):
+proc tick(): seq[bool] =
   var
-    match = true
-    outcome = false
+    pots_new = newSeq[bool]()
 
-  for rule in rules:
-    match = true
+  for i in (low(pots) - 4)..(high(pots) + 4):
+    var
+      match = true
+      outcome = false
 
-    for j in -2..2:
-      var
-        offset = i + j
-        pot_val = false
+    for rule in rules:
+      match = true
 
-      if offset >= low(pots) and offset <= high(pots):
-        pot_val = pots[offset]
+      for j in -2..2:
+        var
+          offset = i + j
+          pot_val = false
 
-      if not pot_val == rule.pattern[j + 2]:
-        match = false
+        if offset >= low(pots) and offset <= high(pots):
+          pot_val = pots[offset]
+
+        if not pot_val == rule.pattern[j + 2]:
+          match = false
+          break
+
+      if match:
+        outcome = rule.outcome
         break
 
     if match:
-      outcome = rule.outcome
-      break
+      pots_new.add(outcome)
+    else:
+      pots_new.add(false)
 
-  if match:
-    pots_new.add(outcome)
-  else:
-    pots_new.add(false)
+  result = pots_new
 
-echo seq_to_str(pots_new)
+echo seq_to_str(tick())
     
