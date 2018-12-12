@@ -17,6 +17,7 @@ import terminal
 import re
 import sequtils
 import sets
+import deques
 
 var
   filename = ""
@@ -40,7 +41,7 @@ var
   file = newFileStream(filename, fmRead)
   line = ""
   rules = newSeq[Rule]()
-  pots: seq[bool]
+  pots = initDeque[bool]()
 
 proc str_to_seq(s: string): seq[bool] =
   var
@@ -63,7 +64,9 @@ if not isNil(file):
       entry.outcome = str_to_seq(matches[1])[0]
       rules.add(entry)
     if match(line, re"^initial state: (.*)$", matches, 0):
-      pots = str_to_seq(matches[0])
+      var pots_seq = str_to_seq(matches[0])
+      for p in pots_seq:
+        pots.addLast(p)
   file.close()
 
 echo $pots
