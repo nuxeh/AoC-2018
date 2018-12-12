@@ -8,6 +8,7 @@ Options:
   -h --help       Show this help message.
   -v --verbose    Show extra information.
   -t --test       Use test points
+  --part2         Use parameters for part 2
 """
 import docopt
 import streams
@@ -128,12 +129,18 @@ proc tick(pots_in: seq[bool]): seq[bool] =
   inc(gen)
   result = pots_new
 
-for i in 0..19:
+var
+  total = 0
+  target_gen: int64 = 19
+
+if args["--part2"]:
+  target_gen = 50000000000 - 1
+
+for i in 0..target_gen:
   pots = tick(pots)
 
 echo seq_to_str(pots)
 
-var total = 0
 for i, p in pots:
   var
     offset = gen * 4
