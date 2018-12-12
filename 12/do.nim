@@ -95,26 +95,34 @@ echo seq_to_str(pots)
 var
   pots_new = newSeq[bool]()
 
-for i, p in pots:
-  pots_new.add(false)
+for i in (low(pots) - 4)..(high(pots) + 4):
+  var
+    match = true
+    outcome = false
 
   for rule in rules:
-    var
-      match = true
+    match = true
 
     for j in -2..2:
       var
         offset = i + j
         pot_val = false
 
-      if offset > low(pots) and offset < high(pots):
+      if offset >= low(pots) and offset <= high(pots):
         pot_val = pots[offset]
 
       if not pot_val == rule.pattern[j + 2]:
         match = false
+        break
 
     if match:
-      pots_new[i] = rule.outcome
+      outcome = rule.outcome
+      break
+
+  if match:
+    pots_new.add(outcome)
+  else:
+    pots_new.add(false)
 
 echo seq_to_str(pots_new)
     
