@@ -131,14 +131,11 @@ proc tick(pots_in: seq[bool]): seq[bool] =
 
 var
   target_gen: int64 = 19
+  sums = newSeq[int]()
 
 if args["--part2"]:
-  target_gen = 50000000000 - 1
-
-for i in 0..target_gen:
-  pots = tick(pots)
-
-echo seq_to_str(pots)
+  target_gen = (20 * 100) - 1
+  #target_gen = 50000000000 - 1
 
 proc checksum(pots_in: seq[bool]): int =
   var
@@ -152,4 +149,14 @@ proc checksum(pots_in: seq[bool]): int =
 
     result = total
 
+for i in 0..target_gen:
+  pots = tick(pots)
+  var sum = checksum(pots)
+  if sums.contains(sum):
+    echo "found repetition at generation=" & $gen
+    break
+  else:
+    sums.add(sum)
+
+echo seq_to_str(pots)
 echo $checksum(pots)
