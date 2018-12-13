@@ -17,6 +17,7 @@ import terminal
 import re
 import sequtils
 import sets
+import algorithm
 
 var
   filename = ""
@@ -36,33 +37,44 @@ type
     y: int
   ]
 
-type
   Point = tuple[
     position: Xy,
     velocity: Xy
   ]
 
-type
-  Space = tuple[
-    data: seq[Xy],
-    dim: Xy,
-  ]
+  Block = object
+    data: seq[Xy]
+    dim: Xy
+
+  Symbol = enum
+    trackHorz = '-',
+    curveRight = '/',
+    cartLeft = '<',
+    cartRight = '>',
+    curveLeft = '\\',
+    cartUp = '^',
+    cartDown = 'v',
+    trackVert = '|'
+
+var syms = ['-', '/', '\\', '<', '>', 'v', '^', '|']
+sort(syms, system.cmp[char])
+echo $syms
 
 var
   file = newFileStream(filename, fmRead)
   line = ""
-  points = newSeq[Point]()
 
-# position=< 1,  6> velocity=< 1,  0>
+var
+  map: seq[seq[Symbol]]
+
 if not isNil(file):
   while file.readLine(line):
-    var matches: array[4, string]
-    if match(line, re"^position=<(.*),(.*)> velocity=<(.*),(.*)>$", matches, 0):
-      var entry: Point
-      entry = ((parseInt(strip(matches[0])), parseInt(strip(matches[1]))),
-               (parseInt(strip(matches[2])), parseInt(strip(matches[3]))))
-      points.add(entry)
+    var row = newSeq[Symbol]()
+    for ch in line:
+      row.add(ch)
+    map.add(row)
   file.close()
+
 
 
 for p in points:
