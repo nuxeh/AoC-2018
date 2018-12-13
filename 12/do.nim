@@ -135,7 +135,7 @@ var
 
 if args["--part2"]:
   target_gen = (20 * 100) - 1
-  #target_gen = 50000000000 - 1
+  target_gen = (50000000000 mod 57) + 1
 
 proc checksum2(pots_in: seq[bool]): int =
   var
