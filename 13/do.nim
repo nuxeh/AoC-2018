@@ -48,20 +48,23 @@ type
     cart_type: Symbol
     junctions_encountered: int
 
+#static:
 var
-  sym_table = initTable[char, Symbol]()
+  t = initTable[char, Symbol]()
 
-sym_table.add(' ', empty)
-sym_table.add('-', trackHorz)
-sym_table.add('|', trackVert)
-sym_table.add('/', curveRight)
-sym_table.add('\\', curveLeft)
-sym_table.add('<', cartLeft)
-sym_table.add('>', cartRight)
-sym_table.add('^', cartUp)
-sym_table.add('v', cartDown)
-sym_table.add('+', junction)
+t.add(' ', empty)
+t.add('-', trackHorz)
+t.add('|', trackVert)
+t.add('/', curveRight)
+t.add('\\', curveLeft)
+t.add('<', cartLeft)
+t.add('>', cartRight)
+t.add('^', cartUp)
+t.add('v', cartDown)
+t.add('+', junction)
 
+let sym_table = t # const
+#let configLines = filename.slurp().splitLines()
 
 var syms = ['-', '/', '\\', '<', '>', 'v', '^', '|']
 sort(syms, system.cmp[char])
@@ -70,6 +73,7 @@ echo $syms
 var
   file = newFileStream(filename, fmRead)
   line = ""
+
 
 var
   map: seq[seq[Symbol]]
