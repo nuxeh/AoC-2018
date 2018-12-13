@@ -32,29 +32,36 @@ if args["<input>"]:
   filename = $args["<input>"]
 
 type
-  Xy = tuple[
-    x: int,
-    y: int
-  ]
-
-  Point = tuple[
-    position: Xy,
-    velocity: Xy
-  ]
-
-  Block = object
-    data: seq[Xy]
-    dim: Xy
-
   Symbol = enum
-    trackHorz = '-',
-    curveRight = '/',
-    cartLeft = '<',
-    cartRight = '>',
-    curveLeft = '\\',
-    cartUp = '^',
-    cartDown = 'v',
-    trackVert = '|'
+    empty,
+    trackHorz,
+    trackVert,
+    curveRight,
+    curveLeft,
+    cartLeft,
+    cartRight,
+    cartUp,
+    cartDown,
+    junction
+
+  Cart = object
+    cart_type: Symbol
+    junctions_encountered: int
+
+var
+  sym_table = initTable[char, Symbol]()
+
+sym_table.add(' ', empty)
+sym_table.add('-', trackHorz)
+sym_table.add('|', trackVert)
+sym_table.add('/', curveRight)
+sym_table.add('\\', curveLeft)
+sym_table.add('<', cartLeft)
+sym_table.add('>', cartRight)
+sym_table.add('^', cartUp)
+sym_table.add('v', cartDown)
+sym_table.add('+', junction)
+
 
 var syms = ['-', '/', '\\', '<', '>', 'v', '^', '|']
 sort(syms, system.cmp[char])
@@ -71,11 +78,8 @@ if not isNil(file):
   while file.readLine(line):
     var row = newSeq[Symbol]()
     for ch in line:
-      row.add(ch)
+      row.add(sym_table[ch])
     map.add(row)
   file.close()
 
-
-
-for p in points:
-  echo $p
+echo $map
