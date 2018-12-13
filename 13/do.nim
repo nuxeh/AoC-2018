@@ -64,26 +64,24 @@ t.add('v', cartDown)
 t.add('+', junction)
 
 let sym_table = t # const
-#let configLines = filename.slurp().splitLines()
-
-var syms = ['-', '/', '\\', '<', '>', 'v', '^', '|']
-sort(syms, system.cmp[char])
-echo $syms
 
 var
   file = newFileStream(filename, fmRead)
   line = ""
 
-
 var
   map: seq[seq[Symbol]]
+  carts: seq[Cart]
 
 if not isNil(file):
   while file.readLine(line):
     var row = newSeq[Symbol]()
     for ch in line:
       row.add(sym_table[ch])
+      if [cartUp, cartDown, cartLeft, cartRight].contains(sym_table[ch]):
+        carts.add(Cart(cart_type: sym_table[ch], junctions_encountered: 0))
     map.add(row)
   file.close()
 
+echo "found " & $len(carts) & " carts"
 echo $map
