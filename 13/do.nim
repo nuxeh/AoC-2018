@@ -47,6 +47,8 @@ type
   Cart = object
     cart_type: Symbol
     junctions_encountered: int
+    x: int
+    y: int
 
 #static:
 var
@@ -72,17 +74,48 @@ var
 var
   map: seq[seq[Symbol]]
   carts: seq[Cart]
+  r = 0
 
 if not isNil(file):
   while file.readLine(line):
     var row = newSeq[Symbol]()
-    for ch in line:
+    for c, ch in line:
       var s = sym_table[ch]
       row.add(s)
       if [cartUp, cartDown, cartLeft, cartRight].contains(s):
-        carts.add(Cart(cart_type: s, junctions_encountered: 0))
+        carts.add(
+          Cart(
+            cart_type: s,
+            junctions_encountered: 0,
+            x: c,
+            y: r
+        ))
     map.add(row)
+    inc(r)
   file.close()
 
+proc char_from_sym(s: Symbol): char =
+  for sym in pairs(sym_table):
+    if sym[1] == s:
+      result = sym[0]
+
+proc draw() =
+  for y, row in map:
+    for x, col in row:
+      var
+        c = char_from_sym(col)
+      for cart in carts:
+        if cart.x == x and cart.y == y:
+          c = char_from_sym(cart.cart_type)
+      stdout.write c
+    stdout.write '\n'
+
 echo "found " & $len(carts) & " carts"
-echo $map
+if args["--verbose"]:
+  for cart in carts:
+    echo $cart
+  draw()
+
+proc tick() =
+  for cart in carts:
+    echo "moo" #move_cart()
