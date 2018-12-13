@@ -77,9 +77,10 @@ if not isNil(file):
   while file.readLine(line):
     var row = newSeq[Symbol]()
     for ch in line:
-      row.add(sym_table[ch])
-      if [cartUp, cartDown, cartLeft, cartRight].contains(sym_table[ch]):
-        carts.add(Cart(cart_type: sym_table[ch], junctions_encountered: 0))
+      var s = sym_table[ch]
+      row.add(s)
+      if [cartUp, cartDown, cartLeft, cartRight].contains(s):
+        carts.add(Cart(cart_type: s, junctions_encountered: 0))
     map.add(row)
   file.close()
 
