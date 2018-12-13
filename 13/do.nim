@@ -116,6 +116,12 @@ if args["--verbose"]:
     echo $cart
   draw()
 
+proc move(self: ref Cart) =
+  self.cart_type = junction
+
 proc tick() =
-  for cart in carts:
-    echo "moo" #move_cart()
+  for cart in mitems(carts):
+    discard cart.move()
+
+tick()
+draw()
