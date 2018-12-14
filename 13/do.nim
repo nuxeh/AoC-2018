@@ -81,7 +81,6 @@ if not isNil(file):
     var row = newSeq[Symbol]()
     for c, ch in line:
       var s = sym_table[ch]
-      row.add(s)
       if [cartUp, cartDown, cartLeft, cartRight].contains(s):
         carts.add(
           Cart(
@@ -90,6 +89,11 @@ if not isNil(file):
             x: c,
             y: r
         ))
+        if s == cartUp or s == cartDown:
+          s = trackVert
+        else:
+          s = trackHorz
+      row.add(s)
     map.add(row)
     inc(r)
   file.close()
