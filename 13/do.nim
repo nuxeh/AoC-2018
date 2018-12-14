@@ -121,10 +121,10 @@ if args["--verbose"]:
   draw()
 
 proc detect_collisions(): bool =
-  for cartA in carts:
-    for cartB in carts:
-      if cartA.x == cartB.x and cartA.y == cartB.y and cartA != cartB:
-        echo "collision at " & $cartA.x & "," & $cartB.y & "!"
+  for i, cartA in carts:
+    for j, cartB in carts:
+      if i != j and cartA.x == cartB.x and cartA.y == cartB.y:
+        echo "collision at " & $cartA.x & "," & $cartA.y & "!"
         result = true
 
 proc turn(s: Symbol, dir: int): Symbol =
