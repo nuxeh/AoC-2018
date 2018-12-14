@@ -116,12 +116,92 @@ if args["--verbose"]:
     echo $cart
   draw()
 
-proc move(self: ref Cart) =
-  self.cart_type = junction
+proc detect_collisions() =
+  for cartA in carts:
+    for cartB in carts:
+      if cartA.x == cartB.x and cartA.y == cartB.y:
+        echo "collision!"
+
+proc turn(s: Symbol, dir: int): Symbol =
+  case dir:
+    of 0:
+      case s:
+        of cartRight:
+          result = cartUp
+        of cartLeft:
+          result = cartDown
+        of cartUp:
+          result = cartLeft
+        of cartDown:
+          result = cartRight
+        else:
+          discard
+    of 1:
+      result = s
+    of 2:
+      case s:
+        of cartRight:
+          result = cartDown
+        of cartLeft:
+          result = cartUp
+        of cartUp:
+          result = cartRight
+        of cartDown:
+          result = cartLeft
+        else:
+          discard
+    else:
+      discard
+
+#proc move(self: ref Cart) =
+#  self.cart_type = junction
 
 proc tick() =
   for cart in mitems(carts):
-    discard cart.move()
+    #cart.move()
+    case cart.cart_type:
+      of cartRight:
+        cart.x += 1
+      of cartLeft:
+        cart.x -= 1
+      of cartUp:
+        cart.y -= 1
+      of cartDown:
+        cart.y += 1
+      else:
+        discard
 
-tick()
-draw()
+    case map[cart.y][cart.x]:
+      of curveRight:
+        case cart.cart_type:
+          of cartRight:
+            cart.cart_type = cartUp
+          of cartLeft:
+            cart.cart_type = cartDown
+          of cartUp:
+            cart.cart_type = cartRight
+          of cartDown:
+            cart.cart_type = cartLeft
+          else:
+            discard
+      of curveLeft:
+        case cart.cart_type:
+          of cartRight:
+            cart.cart_type = cartDown
+          of cartLeft:
+            cart.cart_type = cartUp
+          of cartUp:
+            cart.cart_type = cartLeft
+          of cartDown:
+            cart.cart_type = cartRight
+          else:
+            discard
+      of junction:
+        cart.cart_type = turn(cart.cart_type, cart.junctions_encountered)
+        cart.junctions_encountered = (cart.junctions_encountered + 1) mod 2
+      else:
+        discard
+
+for i in 0..<15:
+  tick()
+  draw()
