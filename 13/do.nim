@@ -120,11 +120,12 @@ if args["--verbose"]:
     echo $cart
   draw()
 
-proc detect_collisions() =
+proc detect_collisions(): bool =
   for cartA in carts:
     for cartB in carts:
       if cartA.x == cartB.x and cartA.y == cartB.y and cartA != cartB:
-        echo "collision!"
+        echo "collision at " & $cartA.x & "," & $cartB.y & "!"
+        result = true
 
 proc turn(s: Symbol, dir: int): Symbol =
   case dir:
@@ -160,7 +161,7 @@ proc turn(s: Symbol, dir: int): Symbol =
 #proc move(self: ref Cart) =
 #  self.cart_type = junction
 
-proc tick() =
+proc tick(): bool =
   for cart in mitems(carts):
     #cart.move()
     case cart.cart_type:
@@ -206,8 +207,10 @@ proc tick() =
       else:
         discard
 
-  detect_collisions()
+  result = detect_collisions()
 
-for i in 0..<15:
-  tick()
-  draw()
+while true:
+  if tick():
+    break
+  if args["--verbose"]:
+    draw()
