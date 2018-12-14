@@ -123,7 +123,7 @@ if args["--verbose"]:
 proc detect_collisions() =
   for cartA in carts:
     for cartB in carts:
-      if cartA.x == cartB.x and cartA.y == cartB.y:
+      if cartA.x == cartB.x and cartA.y == cartB.y and cartA != cartB:
         echo "collision!"
 
 proc turn(s: Symbol, dir: int): Symbol =
@@ -202,9 +202,11 @@ proc tick() =
             discard
       of junction:
         cart.cart_type = turn(cart.cart_type, cart.junctions_encountered)
-        cart.junctions_encountered = (cart.junctions_encountered + 1) mod 2
+        cart.junctions_encountered = (cart.junctions_encountered + 1) mod 3
       else:
         discard
+
+  detect_collisions()
 
 for i in 0..<15:
   tick()
