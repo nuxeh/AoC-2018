@@ -209,8 +209,13 @@ proc tick(): bool =
 
   result = detect_collisions()
 
+var
+  ticks = 0
+
 while true:
   if tick():
+    echo "tick=" & $ticks
     break
+  inc(ticks)
   if args["--verbose"]:
     draw()
