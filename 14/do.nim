@@ -22,7 +22,7 @@ import lists
 
 var
   input = 633601
-  recipeList = initDoublyLinkedList[int]()
+  recipeList = initDoublyLinkedRing[int]()
 
 let args = docopt(doc, version = "0.1.0")
 if args["--test"]:
