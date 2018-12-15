@@ -1,8 +1,8 @@
 let doc = """
-Advent of code {}, day {}
+Advent of code 2018, day 15: Beverage Bandits
 
 Usage:
-  day{} [options] [<input>]
+  ./do [options] [<input>]
 
 Options:
   -h --help       Show this help message.
@@ -18,6 +18,7 @@ import re
 import sequtils
 import sets
 import algorithm
+import typetraits
 
 var
   filename = ""
@@ -33,20 +34,19 @@ if args["<input>"]:
 
 type
   Xy = object
-    x: int
-    y: int
+    x, y: int
 
-  Map = enum
+  CellType = enum
     EmptySpace,
     Wall
-
-  Cell = object
-    coords: Xy
-    kind: Map
 
   PlayerType = enum
     Goblin,
     Elf
+
+  Cell = object
+    coords: Xy
+    kind: CellType
 
   Player = object
     coords: Xy
@@ -55,12 +55,14 @@ type
 var
   file = newFileStream(filename, fmRead)
   line = ""
-  grid = newSeq[Cell]()
+  grid: seq[seq[Cell]]
   players = newSeq[Player]()
   curLine = 0
 
 if not isNil(file):
   while file.readLine(line):
+    var
+      row = newSeq[Cell]()
     for x, c in line:
       var
         pos: Xy = Xy(x: x, y: curLine)
@@ -71,10 +73,10 @@ if not isNil(file):
       case c:
         of '#':
           nC.kind = Wall
-          grid.add(nC)
+          row.add(nC)
         of '.':
           nC.kind = EmptySpace
-          grid.add(nC)
+          row.add(nC)
         of 'G':
           nP.kind = Goblin
           players.add(nP)
@@ -82,10 +84,25 @@ if not isNil(file):
           nP.kind = Elf
           players.add(nP)
         else: echo "unknown character: " & c
+      grid.add(row)
     inc(curLine)
   file.close()
 
+proc draw() =
+  for y, l in grid:
+    for c in l:
+      echo $c.type.name
+#[
+      case cell.kind:
+        of Wall:
+          stdout.write '#'
+        of EmptySpace:
+          stdout.write '.'
+]#
+    stdout.write '\n'
+
 echo "found " & $len(players) & " players"
 if args["--verbose"]:
+  draw()
   for p in players:
     echo $p
