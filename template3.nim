@@ -2,7 +2,7 @@ let doc = """
 Advent of code {}, day {}
 
 Usage:
-  day{} [options] [<input>]
+  do [options] [<input>]
 
 Options:
   -h --help       Show this help message.
