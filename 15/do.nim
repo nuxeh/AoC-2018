@@ -67,9 +67,8 @@ if not isNil(file):
     for x, c in line:
       var
         pos: Xy = Xy(x: x, y: curLine)
-        nC: Cell
+        nC: Cell = Cell(coords: pos, kind: EmptySpace, player: -1)
         nP: Player
-      nC.coords = pos
       nP.coords = pos
       case c:
         of '#':
@@ -78,13 +77,13 @@ if not isNil(file):
           nC.kind = EmptySpace
         of 'G':
           nP.kind = Goblin
-          players.add(nP)
           nC.kind = EmptySpace
+          players.add(nP)
           nC.player = high(players)
         of 'E':
           nP.kind = Elf
-          players.add(nP)
           nC.kind = EmptySpace
+          players.add(nP)
           nC.player = high(players)
         else:
           echo "unknown character: '" & c & "'"
@@ -96,6 +95,13 @@ if not isNil(file):
 proc draw() =
   for y, l in grid:
     for x, c in l:
+      if c.player > -1:
+        case players[c.player].kind:
+          of Goblin:
+            stdout.write 'G'
+          of Elf:
+            stdout.write 'E'
+        continue
       case c.kind:
         of Wall:
           stdout.write '#'
