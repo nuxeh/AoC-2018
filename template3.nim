@@ -17,6 +17,7 @@ import terminal
 import re
 import sequtils
 import sets
+import algorithm
 
 var
   filename = ""
