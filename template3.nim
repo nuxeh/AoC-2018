@@ -37,13 +37,11 @@ type
     y: int
   ]
 
-type
   Point = tuple[
     position: Xy,
     velocity: Xy
   ]
 
-type
   Space = tuple[
     data: seq[Xy],
     dim: Xy,
