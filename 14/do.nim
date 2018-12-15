@@ -9,19 +9,26 @@ Options:
   -v --verbose    Show extra information.
   -t --test       Use test points
 """
+import re
 import docopt
+import terminal
 import streams
 import strutils
-import tables
-import terminal
-import re
 import sequtils
-import sets
 import algorithm
+import tables
+import sets
+import lists
 
 var
   input = 633601
+  recipeList = initSinglyLinkedList[int]()
 
 let args = docopt(doc, version = "0.1.0")
 if args["--test"]:
   input = 15
+
+recipeList.prepend(7)
+recipeList.prepend(3)
+
+echo $recipeList
