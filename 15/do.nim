@@ -44,13 +44,14 @@ type
     Goblin,
     Elf
 
-  Cell = object
-    coords: Xy
-    kind: CellType
-
   Player = object
     coords: Xy
     kind: PlayerType
+
+  Cell = object
+    coords: Xy
+    kind: CellType
+    player: int
 
 var
   file = newFileStream(filename, fmRead)
@@ -73,32 +74,33 @@ if not isNil(file):
       case c:
         of '#':
           nC.kind = Wall
-          row.add(nC)
         of '.':
           nC.kind = EmptySpace
-          row.add(nC)
         of 'G':
           nP.kind = Goblin
           players.add(nP)
+          nC.kind = EmptySpace
+          nC.player = high(players)
         of 'E':
           nP.kind = Elf
           players.add(nP)
-        else: echo "unknown character: " & c
-      grid.add(row)
+          nC.kind = EmptySpace
+          nC.player = high(players)
+        else:
+          echo "unknown character: '" & c & "'"
+      row.add(nC)
+    grid.add(row)
     inc(curLine)
   file.close()
 
 proc draw() =
   for y, l in grid:
-    for c in l:
-      echo $c.type.name
-#[
-      case cell.kind:
+    for x, c in l:
+      case c.kind:
         of Wall:
           stdout.write '#'
         of EmptySpace:
           stdout.write '.'
-]#
     stdout.write '\n'
 
 echo "found " & $len(players) & " players"
