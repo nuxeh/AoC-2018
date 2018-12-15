@@ -22,13 +22,13 @@ import lists
 
 var
   input = 633601
-  recipeList = initSinglyLinkedList[int]()
+  recipeList = initDoublyLinkedList[int]()
 
 let args = docopt(doc, version = "0.1.0")
 if args["--test"]:
   input = 15
 
-recipeList.prepend(7)
-recipeList.prepend(3)
+recipeList.append(3)
+recipeList.append(7)
 
 echo $recipeList
