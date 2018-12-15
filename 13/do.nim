@@ -156,7 +156,7 @@ proc turn(s: Symbol, dir: int): Symbol =
         else:
           discard
     else:
-      discard
+      echo "invalid direction!"
 
 #proc move(self: ref Cart) =
 #  self.cart_type = junction
@@ -205,7 +205,7 @@ proc tick(): bool =
         cart.cart_type = turn(cart.cart_type, cart.junctions_encountered)
         cart.junctions_encountered = (cart.junctions_encountered + 1) mod 3
       else:
-        discard
+        echo "invalid symbol type: " & $map[cart.y][cart.x]
 
   result = detect_collisions()
 
