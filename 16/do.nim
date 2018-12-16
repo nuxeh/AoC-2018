@@ -172,17 +172,23 @@ for o in OpcodeName:
   var
     matches = initSet[int]()
 
+  echo matches.type.name
+
   for t in traces:
-    var
-      cpu: Cpu
-      trace: Trace = t
     if t.possibleOps.contains(o):
-      cpu.regs = t.initialState
-      trace.op.opName = o
-      interpret(trace.op, cpu)
-#      if cpu.regs != t.finalState:
-#        break
       matches.incl(t.op.op)
+
+  for i in 0..15: # len(OpcodeName)?!
+    for t in traces:
+      var
+        cpu: Cpu
+        trace: Trace = t
+      if t.op.op == i:
+        cpu.regs = t.initialState
+        trace.op.opName = o
+        interpret(trace.op, cpu)
+        if cpu.regs != trace.finalState:
+          matches.excl(t.op.op)
 
   echo $matches
 
