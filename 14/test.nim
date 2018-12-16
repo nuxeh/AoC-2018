@@ -16,3 +16,8 @@ proc printDigits(tot: int64) =
 
 printDigits(10)
 printDigits(123123798123098132)
+
+var
+  str = "asdawe12ewqda"
+
+echo str[4]
