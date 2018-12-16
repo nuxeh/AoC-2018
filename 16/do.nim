@@ -33,16 +33,17 @@ else:
 
 type
   Cpu = object
-    regA, regB, regC: int64
-
-  Opcode = object
-    op, inputA, inputB, output: int
+    regs: array[4, int64]
+    pc: int64
 
   OpcodeName = enum
+    None,
     Addr,
     Addi,
     Mulr,
     Muli,
+    Banr,
+    Bani,
     Borr,
     Bori,
     Setr,
@@ -54,11 +55,15 @@ type
     Eqri,
     Eqrr
 
+  Opcode = object
+    op, inputA, inputB, output: int
+    opName: OpcodeName
+
   Trace = object
     op: Opcode
     initialState: seq[int]
     finalState: seq[int]
-    opName: seq[OpcodeName]
+    possibleOps: seq[OpcodeName]
 
 var
   file = newFileStream(filename, fmRead)
@@ -87,9 +92,42 @@ if not isNil(file):
       t.op = o
 
   file.close()
-var i = 0
-for t in traces:
-  echo $t
-  inc(i)
-echo $i
+
 echo "found " & $len(traces) & " traces"
+
+proc interpret(op: Opcode, cpu: var Cpu) =
+  case op.opName:
+    of Addr:
+      cpu.regs[op.output] = cpu.regs[op.inputA] + cpu.regs[op.inputB]
+    of Addi:
+      cpu.regs[op.output] = cpu.regs[op.inputA] + op.inputB
+    of Mulr:
+      cpu.regs[op.output] = cpu.regs[op.inputA] * cpu.regs[op.inputB]
+    of Muli:
+      cpu.regs[op.output] = cpu.regs[op.inputA] * op.inputB
+    of Banr:
+      cpu.regs[op.output] = cpu.regs[op.inputA] and cpu.regs[op.inputB]
+    of Bani:
+      cpu.regs[op.output] = cpu.regs[op.inputA] and op.inputB
+    of Borr:
+      cpu.regs[op.output] = cpu.regs[op.inputA] or cpu.regs[op.inputB]
+    of Bori:
+      cpu.regs[op.output] = cpu.regs[op.inputA] or op.inputB
+    of Setr:
+      cpu.regs[op.output] = cpu.regs[op.inputA]
+    of Seti:
+      cpu.regs[op.output] = op.inputA
+    of Gtir:
+      cpu.regs[op.output] = cast[int64](op.inputA > cpu.regs[op.inputB]))
+    of Grri:
+      cpu.regs[op.output] = cast[int64](cpu.regs[op.inputA] > op.inputB)
+    of Gtrr:
+      cpu.regs[op.output] = cast[int64](cpu.regs[op.inputA] > cpu.regs[op.inputB])
+    of Eqir:
+      cpu.regs[op.output] = cast[int64](op.inputA == cpu.regs[op.inputB])
+    of Eqri:
+      cpu.regs[op.output] = cast[int64](cpu.regs[op.inputA] == op.inputB)
+    of Eqrr:
+      cpu.regs[op.output] = cast[int64](cpu.regs[op.inputA] == cpu.regs[op.inputB])
+    else:
+      echo "invalid opcode (" & op.opName  & ")!"
