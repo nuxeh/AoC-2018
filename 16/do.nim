@@ -177,3 +177,8 @@ for o in OpcodeName:
 
 echo $opSets
 echo $opTable
+
+for s in opSets:
+  echo $s
+  if len(s) == 1:
+    echo "length one"
