@@ -135,4 +135,10 @@ proc interpret(op: Opcode, cpu: var Cpu) =
 for t in traces:
   var
     cpu: Cpu
-  cpu.regs = cast[array[4, int]](t.initialState)
+    trace: Trace = t
+  echo $trace
+  for opcode in OpcodeName:
+    cpu.regs = cast[array[4, int]](t.initialState)
+    trace.op.opName = opcode
+    echo $trace
+    interpret(trace.op, cpu)
