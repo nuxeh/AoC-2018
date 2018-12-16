@@ -142,14 +142,16 @@ for t in mitems(traces):
       trace.op.opName = opcode
       interpret(trace.op, cpu)
       if cpu.regs == t.finalState:
-        echo "opcode matches " & $t.initialState & " -> " & $cpu.regs & " " & $opcode
+        if args["--verbose"]:
+          echo "opcode matches " & $t.initialState & " -> " & $cpu.regs & " " & $opcode
         t.possibleOps.add(opcode)
 
 var
   moreThanThree = 0
 for t in traces:
   if len(t.possibleOps) >= 3:
-    echo $len(t.possibleOps) & " " & $t.possibleOps
+    if args["--verbose"]:
+      echo $len(t.possibleOps) & " " & $t.possibleOps
     inc(moreThanThree)
 
-echo $moreThanThree
+echo $moreThanThree & " with more than 3 possible opcodes"
