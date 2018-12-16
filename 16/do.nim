@@ -164,6 +164,9 @@ echo $moreThanThree & " with more than 3 possible opcodes"
 var
   opTable = newTable[int, OpcodeName]()
   opSets: seq[HashSet[int]]
+  opSetsTable = newTable[OpcodeName, HashSet[int]]()
+
+echo $opTable.type.name
 
 for o in OpcodeName:
   if o == None:
@@ -174,11 +177,14 @@ for o in OpcodeName:
     if t.possibleOps.contains(o):
       matches.incl(t.op.op)
   opSets.add(matches)
+  opSetsTable.add(o, matches)
 
 echo $opSets
 echo $opTable
+echo $opSetsTable
 
 for s in opSets:
   echo $s
   if len(s) == 1:
     echo "length one"
+    
