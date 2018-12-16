@@ -147,6 +147,8 @@ for t in mitems(traces):
           echo "opcode matches " & $t.initialState & " -> " & $cpu.regs & " " & $opcode
         t.possibleOps.add(opcode)
 
+# part 1: find traces with 3 or more possible opcodes
+
 var
   moreThanThree = 0
 for t in traces:
@@ -157,10 +159,19 @@ for t in traces:
 
 echo $moreThanThree & " with more than 3 possible opcodes"
 
+# part 2: find mapping of opcode to integer opcode
+
 var
   opTable = newTable[int, OpcodeName]()
 
 for o in OpcodeName:
+  if o == None:
+    continue
+
+  var
+    matchesAll = true
+    opId: int
+
   for t in traces:
     var
       cpu: Cpu
@@ -170,7 +181,13 @@ for o in OpcodeName:
       trace.op.opName = o
       interpret(trace.op, cpu)
       if cpu.regs != t.finalState:
+        matchesAll = false
         break
-      opTable.add(trace.op.op, o)
+    opId = t.op.op
+    echo ": " & $opId
+
+  echo $matchesAll & " " & $opId
+  if matchesAll:
+    opTable.add(opId, o)
 
 echo $opTable
