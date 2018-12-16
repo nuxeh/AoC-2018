@@ -7,7 +7,8 @@ Usage:
 Options:
   -h --help       Show this help message.
   -v --verbose    Show extra information.
-  -t --test       Use test points
+  -t --test       Use test input.
+  -s=<stop>       Stoping point
 """
 import re
 import docopt
@@ -26,6 +27,7 @@ var
   recipeList = initDoublyLinkedRing[int]()
   elfA: DoublyLinkedNode[int]
   elfB: DoublyLinkedNode[int]
+  nodesAdded = 2
 
 let args = docopt(doc, version = "0.1.0")
 if args["--test"]:
@@ -44,15 +46,15 @@ proc process() =
 
   for c in st:
     recipeList.append(parseInt($c))
+    inc(nodesAdded)
   for i in 0..<(elfA.value + 1):
     elfA = elfA.next
   for i in 0..<(elfB.value + 1):
     elfB = elfB.next
 
-echo $recipeList & " " & $elfA.value & " " & $elfB.value
+while true:
+  process()
+  echo $recipeList & " " & $elfA.value & " " & $elfB.value
+  if nodesAdded > input + 10:
+    break
 
-process()
-echo $recipeList & " " & $elfA.value & " " & $elfB.value
-
-process()
-echo $recipeList & " " & $elfA.value & " " & $elfB.value
