@@ -21,3 +21,4 @@ var
   str = "asdawe12ewqda"
 
 echo str[4]
+echo str[len($str) - 4]
