@@ -9,6 +9,7 @@ Options:
   -v --verbose    Show extra information.
   -t --test       Use test input.
   -s=<stop>       Stoping point
+  --part2         Process part 2
 """
 import re
 import docopt
@@ -36,11 +37,17 @@ if args["--test"]:
 if args["-s"]:
   input = parseInt($args["-s"])
 
+var
+  inputStr = $input
+  inputStrLen = len(inputStr)
+
 recipeList.append(3)
 recipeList.append(7)
 
 elfA = recipeList.head
 elfB = recipeList.head.next
+
+echo "input=" & $input & " (" & $inputStrLen & ")"
 
 proc process() =
   var
@@ -59,12 +66,27 @@ while true:
   process()
   if args["--verbose"]:
     echo $recipeList & " " & $elfA.value & " " & $elfB.value
-  if nodesAdded > input + 10:
-    var i = 0
-    for node in recipeList:
-      if i >= input and i < input + 10:
-        stdout.write $node
-      inc(i)
-    stdout.write '\n'
-    break
-
+  if args["--part2"]:
+    var
+      tail = recipeList.head.prev
+      match = true
+    for i in 0..<inputStrLen:
+      if args["--verbose"]:
+        echo $i & " " & $inputStr[inputStrLen - 1 - i] & " " & $tail.value &
+          " " & $(parseInt($inputStr[inputStrLen - 1 - i]) != tail.value)
+      if parseInt($inputStr[inputStrLen - 1 - i]) != tail.value:
+        match = false
+        break
+      tail = tail.prev
+    if match:
+      echo $(nodesAdded - inputStrLen)
+      break
+  else:
+    if nodesAdded > input + 10:
+      var i = 0
+      for node in recipeList:
+        if i >= input and i < input + 10:
+          stdout.write $node
+        inc(i)
+      stdout.write '\n'
+      break
