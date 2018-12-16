@@ -39,18 +39,14 @@ recipeList.append(3)
 recipeList.append(2)
 
 proc process() =
-  var i = 0
-  for r in recipeList:
-    echo $i & " " & $r
-    inc(i)
+  elfA = elfA.next
+  elfA = elfA.next
 
 elfA = recipeList.head
 elfB = recipeList.head.next
 
 process()
-
 echo $recipeList & " " & $elfA.value & " " & $elfB.value
 
-elfA = elfA.next
-elfA = elfA.next
+process()
 echo $recipeList & " " & $elfA.value & " " & $elfB.value
