@@ -33,7 +33,7 @@ else:
 
 type
   Cpu = object
-    regs: array[4, int]
+    regs: seq[int]
     pc: int64
 
   OpcodeName = enum
@@ -61,8 +61,8 @@ type
 
   Trace = object
     op: Opcode
-    initialState: array[4, int]
-    finalState: array[4, int]
+    initialState: seq[int]
+    finalState: seq[int]
     possibleOps: seq[OpcodeName]
 
 var
@@ -79,9 +79,9 @@ if not isNil(file):
     var
       matches: array[4, string]
     if match(line, re"^Before: \[(\d), (\d+), (\d+), (\d+)\]$", matches, 0):
-      t.initialState = cast[array[4, int]](matches.map(parseInt))
+      t.initialState = matches.map(parseInt)
     elif match(line, re"^After:  \[(\d+), (\d+), (\d+), (\d+)\]$", matches, 0):
-      t.finalState = cast[array[4, int]](matches.map(parseInt))
+      t.finalState = matches.map(parseInt)
       traces.add(t)
     elif match(line, re"^(\d+) (\d+) (\d+) (\d+)$", matches, 0):
       var matchesInt = matches.map(parseInt)
@@ -130,15 +130,25 @@ proc interpret(op: Opcode, cpu: var Cpu) =
     of Eqrr:
       cpu.regs[op.output] = cast[int](cpu.regs[op.inputA] == cpu.regs[op.inputB])
     else:
-      echo "invalid opcode (" & $op.opName & ")!"
+      discard
 
-for t in traces:
+for t in mitems(traces):
   var
     cpu: Cpu
     trace: Trace = t
-  echo $trace
   for opcode in OpcodeName:
-    cpu.regs = cast[array[4, int]](t.initialState)
+    cpu.regs = t.initialState
     trace.op.opName = opcode
-    echo $trace
     interpret(trace.op, cpu)
+    if cpu.regs == t.finalState:
+      echo "opcode matches " & $cpu.regs & " " & $t.finalState
+      t.possibleOps.add(opcode)
+
+var
+  moreThanThree = 0
+for t in traces:
+  if len(t.possibleOps) >= 3:
+    echo $len(t.possibleOps) & " " & $t.possibleOps
+    inc(moreThanThree)
+
+echo $moreThanThree
