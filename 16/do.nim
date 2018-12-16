@@ -92,4 +92,4 @@ for t in traces:
   echo $t
   inc(i)
 echo $i
-echo "found " & $len($traces) & " traces"
+echo "found " & $len(traces) & " traces"
