@@ -31,19 +31,25 @@ let args = docopt(doc, version = "0.1.0")
 if args["--test"]:
   input = 15
 
-recipeList.append(7)
-recipeList.append(6)
-recipeList.append(5)
-recipeList.append(4)
 recipeList.append(3)
-recipeList.append(2)
-
-proc process() =
-  elfA = elfA.next
-  elfA = elfA.next
+recipeList.append(7)
 
 elfA = recipeList.head
 elfB = recipeList.head.next
+
+proc process() =
+  var
+    sum = elfA.value + elfB.value
+    st = $sum
+
+  for c in st:
+    recipeList.append(parseInt($c))
+  for i in 0..<(elfA.value + 1):
+    elfA = elfA.next
+  for i in 0..<(elfB.value + 1):
+    elfB = elfB.next
+
+echo $recipeList & " " & $elfA.value & " " & $elfB.value
 
 process()
 echo $recipeList & " " & $elfA.value & " " & $elfB.value
