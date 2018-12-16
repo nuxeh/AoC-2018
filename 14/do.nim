@@ -66,6 +66,8 @@ while true:
   process()
   if args["--verbose"]:
     echo $recipeList & " " & $elfA.value & " " & $elfB.value
+
+  # part 2
   if args["--part2"]:
     var match = true
     for o in 0..<inputStrLen:
@@ -86,6 +88,8 @@ while true:
     if match:
       echo $(nodesAdded - inputStrLen)
       break
+
+  # part 1
   else:
     if nodesAdded > input + 10:
       var i = 0
