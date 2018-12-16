@@ -77,6 +77,7 @@ if not isNil(file):
       t.initialState = matches.map(parseInt)
     elif match(line, re"^After:  \[(\d+), (\d+), (\d+), (\d+)\]$", matches, 0):
       t.finalState = matches.map(parseInt)
+      traces.add(t)
     elif match(line, re"^(\d+) (\d+) (\d+) (\d+)$", matches, 0):
       var matchesInt = matches.map(parseInt)
       o.op = matchesInt[0]
@@ -84,11 +85,11 @@ if not isNil(file):
       o.inputB = matchesInt[2]
       o.output = matchesInt[3]
       t.op = o
-    else:
-      traces.add(t)
 
   file.close()
-
+var i = 0
 for t in traces:
   echo $t
+  inc(i)
+echo $i
 echo "found " & $len($traces) & " traces"
