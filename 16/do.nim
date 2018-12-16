@@ -169,8 +169,7 @@ for o in OpcodeName:
     continue
 
   var
-    matchesAll = true
-    opId: int
+    matches = initSet[int]()
 
   for t in traces:
     var
@@ -181,13 +180,9 @@ for o in OpcodeName:
       trace.op.opName = o
       interpret(trace.op, cpu)
       if cpu.regs != t.finalState:
-        matchesAll = false
         break
-      opId = t.op.op
-      echo ": " & $opId
+      matches.incl(t.op.op)
 
-  echo $matchesAll & " " & $opId
-  if matchesAll:
-    opTable.add(opId, o)
+  echo $matches
 
 echo $opTable
