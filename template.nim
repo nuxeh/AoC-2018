@@ -9,15 +9,17 @@ Options:
   -v --verbose    Show extra information.
   -t --test       Use test points
 """
+import re
 import docopt
+import terminal
 import streams
 import strutils
-import tables
-import terminal
-import re
 import sequtils
-import sets
 import algorithm
+import tables
+import sets
+import lists
+import typetraits
 
 var
   filename = ""
