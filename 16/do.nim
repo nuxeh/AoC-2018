@@ -163,6 +163,7 @@ echo $moreThanThree & " with more than 3 possible opcodes"
 
 var
   opTable = newTable[int, OpcodeName]()
+#  opSets: seq[set[int]]
 
 for o in OpcodeName:
   if o == None:
@@ -179,8 +180,8 @@ for o in OpcodeName:
       cpu.regs = t.initialState
       trace.op.opName = o
       interpret(trace.op, cpu)
-      if cpu.regs != t.finalState:
-        break
+#      if cpu.regs != t.finalState:
+#        break
       matches.incl(t.op.op)
 
   echo $matches
