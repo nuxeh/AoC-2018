@@ -1,5 +1,5 @@
 let doc = """
-Advent of code {}, day {}
+Advent of code 2018, day 13
 
 Usage:
   day{} [options] [<input>]
