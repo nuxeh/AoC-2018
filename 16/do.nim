@@ -118,7 +118,7 @@ proc interpret(op: Opcode, cpu: var Cpu) =
     of Seti:
       cpu.regs[op.output] = op.inputA
     of Gtir:
-      cpu.regs[op.output] = cast[int64](op.inputA > cpu.regs[op.inputB]))
+      cpu.regs[op.output] = cast[int64](op.inputA > cpu.regs[op.inputB])
     of Grri:
       cpu.regs[op.output] = cast[int64](cpu.regs[op.inputA] > op.inputB)
     of Gtrr:
@@ -130,4 +130,4 @@ proc interpret(op: Opcode, cpu: var Cpu) =
     of Eqrr:
       cpu.regs[op.output] = cast[int64](cpu.regs[op.inputA] == cpu.regs[op.inputB])
     else:
-      echo "invalid opcode (" & op.opName  & ")!"
+      echo "invalid opcode (" & $op.opName & ")!"
