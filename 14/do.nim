@@ -87,6 +87,7 @@ while true:
       currNode = currNode.prev
       if match:
         echo "match at " & $(nodesAdded - step - 1)
+        if args["--verbose"]: echo $recipeList
         break
     if match:
       break
