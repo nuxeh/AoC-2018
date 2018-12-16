@@ -156,3 +156,21 @@ for t in traces:
     inc(moreThanThree)
 
 echo $moreThanThree & " with more than 3 possible opcodes"
+
+var
+  opTable = newTable[int, OpcodeName]()
+
+for o in OpcodeName:
+  for t in traces:
+    var
+      cpu: Cpu
+      trace: Trace = t
+    if t.possibleOps.contains(o):
+      cpu.regs = t.initialState
+      trace.op.opName = o
+      interpret(trace.op, cpu)
+      if cpu.regs != t.finalState:
+        break
+      opTable.add(trace.op.op, o)
+
+echo $opTable
