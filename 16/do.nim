@@ -66,16 +66,17 @@ type
     possibleOps: seq[OpcodeName]
 
 var
-  file = newFileStream(filename, fmRead)
+  traceFile = newFileStream("trace.txt", fmRead)
+  instrFile = newFileStream("prog.txt", fmRead)
   line = ""
   traces = newSeq[Trace]()
   program = newSeq[Opcode]()
 
-if not isNil(file):
+if not isNil(traceFile):
   var
     t: Trace
     o: Opcode
-  while file.readLine(line):
+  while traceFile.readLine(line):
     var
       matches: array[4, string]
     if match(line, re"^Before: \[(\d), (\d+), (\d+), (\d+)\]$", matches, 0):
@@ -91,7 +92,7 @@ if not isNil(file):
       o.output = matchesInt[3]
       t.op = o
 
-  file.close()
+  traceFile.close()
 
 echo "found " & $len(traces) & " traces"
 
