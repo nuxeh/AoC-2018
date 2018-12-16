@@ -8,6 +8,7 @@ Options:
   -h --help       Show this help message.
   -v --verbose    Show extra information.
   -t --test       Use test points
+  --part2         Process for part 2
 """
 import re
 import docopt
