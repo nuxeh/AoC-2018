@@ -70,21 +70,17 @@ while true:
   # part 2
   if args["--part2"]:
     var match = true
-    for o in 0..<inputStrLen:
-      match = true
-      var tail = recipeList.head.prev
-      for j in 0..<o:
-        tail = tail.prev
+    for node in nodes(recipeList):
+      var
+        curr = node
       for i in 0..<inputStrLen:
         if args["--verbose"]:
-          echo $i & " " & $inputStr[inputStrLen - 1 - i] & " " & $tail.value &
-            " " & $(parseInt($inputStr[inputStrLen - 1 - i]) == tail.value)
-        if parseInt($inputStr[inputStrLen - 1 - i]) != tail.value:
+          echo $i & " " & $inputStr[i] & " " & $curr.value & " " & $(parseInt($inputStr[i]) == curr.value)
+        if $inputStr[i] != $curr.value:
           match = false
           break
-        tail = tail.prev
-      if match:
-        break
+        curr = curr.next
+      if match: break
     if match:
       echo $(nodesAdded - inputStrLen)
       break
