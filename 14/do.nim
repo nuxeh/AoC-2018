@@ -24,13 +24,8 @@ import typetraits
 var
   input = 633601
   recipeList = initDoublyLinkedRing[int]()
-  elfA = 0#: ref DoublyLinkedNode[int]
-  elfB = 0#: ref DoublyLinkedNode[int]
-
-proc nth(n: int): DoublyLinkedNode[int] =
-  var node: ref DoublyLinkedNode = recipeList.head
-  for i in 0..<n:
-    result = node.next
+  elfA: DoublyLinkedNode[int]
+  elfB: DoublyLinkedNode[int]
 
 let args = docopt(doc, version = "0.1.0")
 if args["--test"]:
@@ -43,7 +38,19 @@ recipeList.append(4)
 recipeList.append(3)
 recipeList.append(2)
 
-elfA = 0
-elfB = 1
+proc process() =
+  var i = 0
+  for r in recipeList:
+    echo $i & " " & $r
+    inc(i)
 
-echo $recipeList & " " & $nth(elfB).value & " " & $nth(elfA).value
+elfA = recipeList.head
+elfB = recipeList.head.next
+
+process()
+
+echo $recipeList & " " & $elfA.value & " " & $elfB.value
+
+elfA = elfA.next
+elfA = elfA.next
+echo $recipeList & " " & $elfA.value & " " & $elfB.value
