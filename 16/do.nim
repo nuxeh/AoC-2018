@@ -183,8 +183,8 @@ for o in OpcodeName:
       if cpu.regs != t.finalState:
         matchesAll = false
         break
-    opId = t.op.op
-    echo ": " & $opId
+      opId = t.op.op
+      echo ": " & $opId
 
   echo $matchesAll & " " & $opId
   if matchesAll:
