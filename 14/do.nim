@@ -67,17 +67,22 @@ while true:
   if args["--verbose"]:
     echo $recipeList & " " & $elfA.value & " " & $elfB.value
   if args["--part2"]:
-    var
-      tail = recipeList.head.prev
+    var match = true
+    for o in 0..<inputStrLen:
       match = true
-    for i in 0..<inputStrLen:
-      if args["--verbose"]:
-        echo $i & " " & $inputStr[inputStrLen - 1 - i] & " " & $tail.value &
-          " " & $(parseInt($inputStr[inputStrLen - 1 - i]) != tail.value)
-      if parseInt($inputStr[inputStrLen - 1 - i]) != tail.value:
-        match = false
+      var tail = recipeList.head.prev
+      for j in 0..<o:
+        tail = tail.prev
+      for i in 0..<inputStrLen:
+        if args["--verbose"]:
+          echo $i & " " & $inputStr[inputStrLen - 1 - i] & " " & $tail.value &
+            " " & $(parseInt($inputStr[inputStrLen - 1 - i]) == tail.value)
+        if parseInt($inputStr[inputStrLen - 1 - i]) != tail.value:
+          match = false
+          break
+        tail = tail.prev
+      if match:
         break
-      tail = tail.prev
     if match:
       echo $(nodesAdded - inputStrLen)
       break
