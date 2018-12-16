@@ -33,7 +33,7 @@ else:
 
 type
   Cpu = object
-    regs: array[4, int64]
+    regs: array[4, int]
     pc: int64
 
   OpcodeName = enum
@@ -61,8 +61,8 @@ type
 
   Trace = object
     op: Opcode
-    initialState: seq[int]
-    finalState: seq[int]
+    initialState: array[4, int]
+    finalState: array[4, int]
     possibleOps: seq[OpcodeName]
 
 var
@@ -79,9 +79,9 @@ if not isNil(file):
     var
       matches: array[4, string]
     if match(line, re"^Before: \[(\d), (\d+), (\d+), (\d+)\]$", matches, 0):
-      t.initialState = matches.map(parseInt)
+      t.initialState = cast[array[4, int]](matches.map(parseInt))
     elif match(line, re"^After:  \[(\d+), (\d+), (\d+), (\d+)\]$", matches, 0):
-      t.finalState = matches.map(parseInt)
+      t.finalState = cast[array[4, int]](matches.map(parseInt))
       traces.add(t)
     elif match(line, re"^(\d+) (\d+) (\d+) (\d+)$", matches, 0):
       var matchesInt = matches.map(parseInt)
@@ -118,16 +118,21 @@ proc interpret(op: Opcode, cpu: var Cpu) =
     of Seti:
       cpu.regs[op.output] = op.inputA
     of Gtir:
-      cpu.regs[op.output] = cast[int64](op.inputA > cpu.regs[op.inputB])
+      cpu.regs[op.output] = cast[int](op.inputA > cpu.regs[op.inputB])
     of Grri:
-      cpu.regs[op.output] = cast[int64](cpu.regs[op.inputA] > op.inputB)
+      cpu.regs[op.output] = cast[int](cpu.regs[op.inputA] > op.inputB)
     of Gtrr:
-      cpu.regs[op.output] = cast[int64](cpu.regs[op.inputA] > cpu.regs[op.inputB])
+      cpu.regs[op.output] = cast[int](cpu.regs[op.inputA] > cpu.regs[op.inputB])
     of Eqir:
-      cpu.regs[op.output] = cast[int64](op.inputA == cpu.regs[op.inputB])
+      cpu.regs[op.output] = cast[int](op.inputA == cpu.regs[op.inputB])
     of Eqri:
-      cpu.regs[op.output] = cast[int64](cpu.regs[op.inputA] == op.inputB)
+      cpu.regs[op.output] = cast[int](cpu.regs[op.inputA] == op.inputB)
     of Eqrr:
-      cpu.regs[op.output] = cast[int64](cpu.regs[op.inputA] == cpu.regs[op.inputB])
+      cpu.regs[op.output] = cast[int](cpu.regs[op.inputA] == cpu.regs[op.inputB])
     else:
       echo "invalid opcode (" & $op.opName & ")!"
+
+for t in traces:
+  var
+    cpu: Cpu
+  cpu.regs = cast[array[4, int]](t.initialState)
