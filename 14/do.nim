@@ -69,21 +69,29 @@ while true:
 
   # part 2
   if args["--part2"]:
-    var match = true
-    for node in nodes(recipeList):
-      var
-        curr = node
-      for i in 0..<inputStrLen:
-        if args["--verbose"]:
-          echo $i & " " & $inputStr[i] & " " & $curr.value & " " & $(parseInt($inputStr[i]) == curr.value)
-        if $inputStr[i] != $curr.value:
+    var
+      match: bool
+      currNode = recipeList.head.prev # == tail
+
+    for step in 0..<inputStrLen * 2:
+      var readNode = currNode
+      match = true
+
+      # check each digit
+      for n in 0..<inputStrLen:
+        if $inputStr[n] != $readNode.value:
           match = false
           break
-        curr = curr.next
-      if match: break
+        readNode = readNode.next
+
+      currNode = currNode.prev
+      if match:
+        echo "match at " & $(nodesAdded - step - 1)
+        break
     if match:
-      echo $(nodesAdded - inputStrLen)
       break
+
+  #echo $i & " " & $inputStr[i] & " " & $curr.value & " " & $(parseInt($inputStr[i]) == curr.value)
 
   # part 1
   else:
