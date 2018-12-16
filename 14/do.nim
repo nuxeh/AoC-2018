@@ -33,6 +33,9 @@ let args = docopt(doc, version = "0.1.0")
 if args["--test"]:
   input = 15
 
+if args["-s"]:
+  input = parseInt($args["-s"])
+
 recipeList.append(3)
 recipeList.append(7)
 
@@ -54,7 +57,14 @@ proc process() =
 
 while true:
   process()
-  echo $recipeList & " " & $elfA.value & " " & $elfB.value
+  if args["--verbose"]:
+    echo $recipeList & " " & $elfA.value & " " & $elfB.value
   if nodesAdded > input + 10:
+    var i = 0
+    for node in recipeList:
+      if i >= input and i < input + 10:
+        stdout.write $node
+      inc(i)
+    stdout.write '\n'
     break
 
