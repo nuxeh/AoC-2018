@@ -35,37 +35,44 @@ if args["<input>"]:
   filename = $args["<input>"]
 
 type
-  Xy = tuple[
-    x: int,
-    y: int
-  ]
+  ClayType = enum
+    Vertical,
+    Horizontal
 
-  Point = tuple[
-    position: Xy,
-    velocity: Xy
-  ]
-
-  Space = tuple[
-    data: seq[Xy],
-    dim: Xy,
-  ]
+  Clay = object
+    kind: ClayType
+    x, x2, y, y2: int
 
 var
   file = newFileStream(filename, fmRead)
   line = ""
-  points = newSeq[Point]()
+  inputData = newSeq[Clay]()
 
-# position=< 1,  6> velocity=< 1,  0>
+# x=495, y=2..7
+# y=7, x=495..501
 if not isNil(file):
   while file.readLine(line):
-    var matches: array[4, string]
-    if match(line, re"^position=<(.*),(.*)> velocity=<(.*),(.*)>$", matches, 0):
-      var entry: Point
-      entry = ((parseInt(strip(matches[0])), parseInt(strip(matches[1]))),
-               (parseInt(strip(matches[2])), parseInt(strip(matches[3]))))
-      points.add(entry)
+    var matches: array[3, string]
+    if match(line, re"^y=(\d+), x=(\d+)..(\d+)$", matches, 0):
+      var
+        e: Clay
+        i = matches.map(parseInt)
+      e.kind = Horizontal
+      e.y = i[0]
+      e.x = i[1]
+      e.x2 = i[2]
+      inputData.add(e)
+    if match(line, re"^x=(\d+), y=(\d+)..(\d+)$", matches, 0):
+      var
+        e: Clay
+        i = matches.map(parseInt)
+      e.kind = Vertical
+      e.x = i[0]
+      e.y = i[1]
+      e.y2 = i[2]
+      inputData.add(e)
   file.close()
 
-
-for p in points:
-  echo $p
+if args["--verbose"]:
+  for e in inputData:
+    echo $e
