@@ -203,7 +203,7 @@ findRoot()
 echo $opSetsTable
 echo $opTable
 
-# load programme
+# load and run programme
 
 if not isNil(instrFile):
   var o: Opcode
