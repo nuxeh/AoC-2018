@@ -44,8 +44,8 @@ type
     xs, ys: seq[int]
 
   GridType = enum
-    Clay,
     Sand,
+    Clay,
     Wet
 
 var
@@ -95,14 +95,15 @@ echo "minimum extents: x=" & $minX & " y=" & $minY
 map = newSeqWith(maxY - minY, newSeq[GridType](maxX - minX))
 
 proc draw() =
-  for y in minY..<maxY:
-    for x in minX..<maxX:
-      case map[y][x]:
+  for y in map:
+    for x in y:
+      case x:
         of Sand:
           stdout.write '.'
         of Clay:
           stdout.write '#'
         of Wet:
           stdout.write '~'
+    stdout.write '\n'
 
 draw()
