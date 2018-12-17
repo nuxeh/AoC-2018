@@ -46,6 +46,7 @@ type
   GridType = enum
     Sand,
     Clay,
+    Spring,
     Wet
 
 var
@@ -83,16 +84,16 @@ if args["--verbose"]:
     echo $e
 
 var
-  map: seq[seq[GridType]]
   maxX = inputData.foldl(max(a, b.xs.foldl(max(a, b), 0)), 0)
   maxY = inputData.foldl(max(a, b.ys.foldl(max(a, b), 0)), 0)
   minX = inputData.foldl(min(a, b.xs.foldl(min(a, b), maxX)), maxX)
-  minY = inputData.foldl(min(a, b.ys.foldl(min(a, b), maxY)), maxY)
+  minY = 0
+  map = newSeqWith(maxY - minY, newSeq[GridType](maxX - minX))
 
 echo "maximum extents: x=" & $maxX & " y=" & $maxY
 echo "minimum extents: x=" & $minX & " y=" & $minY
 
-map = newSeqWith(maxY - minY, newSeq[GridType](maxX - minX))
+map[0][500 - minX] = Spring
 
 proc draw() =
   for y in map:
@@ -102,6 +103,8 @@ proc draw() =
           stdout.write '.'
         of Clay:
           stdout.write '#'
+        of Spring:
+          stdout.write '+'
         of Wet:
           stdout.write '~'
     stdout.write '\n'
