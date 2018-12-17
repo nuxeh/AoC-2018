@@ -180,10 +180,26 @@ for o in OpcodeName:
   opSetsTable.add(o, matches)
 
 echo $opTable
-echo $opSetsTable
 
-for k, s in opSetsTable:
-  echo $k & " " & $s
-  if len(s) == 1:
-    echo "length one"
-    
+proc recursiveMinimise(opcode: int) =
+  for k, s in mpairs(opSetsTable):
+    s.excl(opcode)
+
+  for k, s in mpairs(opSetsTable):
+    if len(s) == 1:
+      let code = s.pop()
+      recursiveMinimise(code)
+
+proc findRoot() =
+  for k, s in mpairs(opSetsTable):
+    echo $k & " " & $s
+    if len(s) == 1:
+      echo "length one"
+      echo s.type.name
+      echo s.hash()
+      let
+        code = s.pop()
+      recursiveMinimise(code)
+
+findRoot()
+echo $opSetsTable
