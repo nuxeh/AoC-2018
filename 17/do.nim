@@ -89,11 +89,23 @@ var
   minX = inputData.foldl(min(a, b.xs.foldl(min(a, b), maxX)), maxX)
   minY = 0
   map = newSeqWith(maxY - minY, newSeq[GridType](maxX - minX))
+  w = maxX - minX
+  h = maxY - minY
 
 echo "maximum extents: x=" & $maxX & " y=" & $maxY
 echo "minimum extents: x=" & $minX & " y=" & $minY
+echo "w=" & $w & " h=" & $h
 
+# initialise map
 map[0][500 - minX] = Spring
+for c in inputData:
+  case c.kind:
+    of Vertical:
+      for y in c.ys[0]..<c.ys[1]:
+        echo $y & " " & $(c.xs[0] - minX)
+        map[y][c.xs[0] - minX] = Clay
+    of Horizontal:
+      discard
 
 proc draw() =
   for y in map:
