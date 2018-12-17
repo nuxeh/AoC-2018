@@ -179,12 +179,11 @@ for o in OpcodeName:
   opSets.add(matches)
   opSetsTable.add(o, matches)
 
-echo $opSets
 echo $opTable
 echo $opSetsTable
 
-for s in opSets:
-  echo $s
+for k, s in opSetsTable:
+  echo $k & " " & $s
   if len(s) == 1:
     echo "length one"
     
