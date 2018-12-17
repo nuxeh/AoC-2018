@@ -220,3 +220,18 @@ if not isNil(instrFile):
   instrFile.close()
 
 echo "found " & $len(program) & " opcodes"
+
+var
+  cpu: Cpu
+
+cpu.regs.add(0)
+cpu.regs.add(0)
+cpu.regs.add(0)
+cpu.regs.add(0)
+
+echo $cpu
+
+for o in program:
+  interpret(o, cpu)
+
+echo $cpu
