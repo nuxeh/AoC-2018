@@ -91,7 +91,6 @@ if not isNil(traceFile):
       o.inputB = matchesInt[2]
       o.output = matchesInt[3]
       t.op = o
-
   traceFile.close()
 
 echo "found " & $len(traces) & " traces"
@@ -203,3 +202,21 @@ proc findRoot() =
 findRoot()
 echo $opSetsTable
 echo $opTable
+
+# load programme
+
+if not isNil(instrFile):
+  var o: Opcode
+  while instrFile.readLine(line):
+    var matches: array[4, string]
+    if match(line, re"^(\d+) (\d+) (\d+) (\d+)$", matches, 0):
+      var matchesInt = matches.map(parseInt)
+      o.op = matchesInt[0]
+      o.inputA = matchesInt[1]
+      o.inputB = matchesInt[2]
+      o.output = matchesInt[3]
+      o.opName = opTable[o.op]
+      program.add(o)
+  instrFile.close()
+
+echo "found " & $len(program) & " opcodes"
