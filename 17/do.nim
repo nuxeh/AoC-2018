@@ -39,14 +39,19 @@ type
     Vertical,
     Horizontal
 
-  Clay = object
+  ClayDeposit = object
     kind: ClayType
-    x, x2, y, y2: int
+    xs, ys: seq[int]
+
+  GridType = enum
+    Clay,
+    Sand,
+    Wet
 
 var
   file = newFileStream(filename, fmRead)
   line = ""
-  inputData = newSeq[Clay]()
+  inputData = newSeq[ClayDeposit]()
 
 # x=495, y=2..7
 # y=7, x=495..501
@@ -55,23 +60,34 @@ if not isNil(file):
     var matches: array[3, string]
     if match(line, re"^y=(\d+), x=(\d+)..(\d+)$", matches, 0):
       var
-        e: Clay
+        e: ClayDeposit
         i = matches.map(parseInt)
       e.kind = Horizontal
-      e.y = i[0]
-      e.x = i[1]
-      e.x2 = i[2]
+      e.ys.add(i[0])
+      e.xs.add(i[1])
+      e.xs.add(i[2])
       inputData.add(e)
     if match(line, re"^x=(\d+), y=(\d+)..(\d+)$", matches, 0):
       var
-        e: Clay
+        e: ClayDeposit
         i = matches.map(parseInt)
       e.kind = Vertical
-      e.x = i[0]
-      e.y = i[1]
-      e.y2 = i[2]
+      e.xs.add(i[0])
+      e.ys.add(i[1])
+      e.ys.add(i[2])
       inputData.add(e)
   file.close()
 
-for e in inputData:
-  echo $e
+if args["--verbose"]:
+  for e in inputData:
+    echo $e
+
+var
+  map: seq[seq[GridType]]
+  maxX = inputData.foldl(max(a, b.xs.foldl(max(a, b), 0)), 0)
+  maxY = inputData.foldl(max(a, b.ys.foldl(max(a, b), 0)), 0)
+  minX = inputData.foldl(min(a, b.xs.foldl(min(a, b), maxX)), maxX)
+  minY = inputData.foldl(min(a, b.ys.foldl(min(a, b), maxY)), maxY)
+
+echo "maximum extents: x=" & $maxX & " y=" & $maxY
+echo "minimum extents: x=" & $minX & " y=" & $minY
