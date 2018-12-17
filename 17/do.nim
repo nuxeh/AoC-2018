@@ -96,19 +96,9 @@ echo "maximum extents: x=" & $maxX & " y=" & $maxY
 echo "minimum extents: x=" & $minX & " y=" & $minY
 echo "w=" & $w & " h=" & $h
 
-# initialise map
-map[0][500 - minX] = Spring
-for c in inputData:
-  case c.kind:
-    of Vertical:
-      for y in c.ys[0]..<c.ys[1]:
-        echo $y & " " & $(c.xs[0] - minX)
-        map[y][c.xs[0] - minX] = Clay
-    of Horizontal:
-      discard
-
 proc draw() =
   for y in map:
+    stdout.write $y & " "
     for x in y:
       case x:
         of Sand:
@@ -122,3 +112,14 @@ proc draw() =
     stdout.write '\n'
 
 draw()
+
+# initialise map
+map[0][500 - minX] = Spring
+for c in inputData:
+  case c.kind:
+    of Vertical:
+      for y in c.ys[0]..<c.ys[1]:
+        echo $y & " " & $(c.xs[0] - minX)
+        map[y][c.xs[0] - minX] = Clay
+    of Horizontal:
+      discard
