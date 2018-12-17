@@ -161,14 +161,18 @@ proc checksum(pots_in: seq[bool]): int =
 
 for i in 0..target_gen:
   pots = tick(pots)
-  var sum = checksum2(pots)
-  if sums.contains(sum):
+  var
+    sum = checksum2(pots)
+    s = pots.toSet()
+    h = s.hash()
+  echo $h
+  if sums.contains(h):
     echo "found repetition at generation=" & $gen
     echo seq_to_str(pots)
     break
   else:
     echo "[" & $gen & "] " & $sum
-    sums.add(sum)
+    sums.add(h)
 
 echo seq_to_str(pots)
 echo $checksum(pots)
