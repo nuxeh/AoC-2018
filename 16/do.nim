@@ -7,8 +7,6 @@ Usage:
 Options:
   -h --help       Show this help message.
   -v --verbose    Show extra information.
-  -t --test       Use test points
-  --part2         Process for part 2
 """
 import docopt
 import streams
@@ -22,14 +20,7 @@ import lists
 import algorithm
 import typetraits
 
-var
-  filename = ""
-
 let args = docopt(doc, version = "0.1.0")
-if args["--part2"]:
-  filename = "prog.txt"
-else:
-  filename = "trace.txt"
 
 type
   Cpu = object
@@ -131,6 +122,8 @@ proc interpret(op: Opcode, cpu: var Cpu) =
       cpu.regs[op.output] = cast[int](cpu.regs[op.inputA] == cpu.regs[op.inputB])
     else:
       discard
+
+# find all traces with candidate opcodes
 
 for t in mitems(traces):
   var
