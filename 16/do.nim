@@ -179,8 +179,6 @@ for o in OpcodeName:
   opSets.add(matches)
   opSetsTable.add(o, matches)
 
-echo $opTable
-
 proc recursiveMinimise(opcode: int) =
   for k, s in mpairs(opSetsTable):
     s.excl(opcode)
@@ -188,6 +186,7 @@ proc recursiveMinimise(opcode: int) =
   for k, s in mpairs(opSetsTable):
     if len(s) == 1:
       let code = s.pop()
+      opTable.add(code, k)
       recursiveMinimise(code)
 
 proc findRoot() =
@@ -197,9 +196,10 @@ proc findRoot() =
       echo "length one"
       echo s.type.name
       echo s.hash()
-      let
-        code = s.pop()
+      let code = s.pop()
+      opTable.add(code, k)
       recursiveMinimise(code)
 
 findRoot()
 echo $opSetsTable
+echo $opTable
