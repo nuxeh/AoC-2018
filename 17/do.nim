@@ -97,9 +97,13 @@ echo "minimum extents: x=" & $minX & " y=" & $minY
 echo "w=" & $w & " h=" & $h
 
 proc draw() =
-  for y in map:
-    stdout.write $y & " "
-    for x in y:
+  for x, elem in map[0]:
+    stdout.write toHex(x mod 16) & " "
+  stdout.write '\n'
+    
+  for y, row in map:
+    stdout.write $y & '\t'
+    for x in row:
       case x:
         of Sand:
           stdout.write '.'
@@ -118,8 +122,13 @@ map[0][500 - minX] = Spring
 for c in inputData:
   case c.kind:
     of Vertical:
+      echo $c
       for y in c.ys[0]..<c.ys[1]:
         echo $y & " " & $(c.xs[0] - minX)
         map[y][c.xs[0] - minX] = Clay
     of Horizontal:
       discard
+
+# resizeable infinite grid lib
+# serde file loading
+# comonad, monoid, monad
