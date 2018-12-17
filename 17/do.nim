@@ -91,3 +91,18 @@ var
 
 echo "maximum extents: x=" & $maxX & " y=" & $maxY
 echo "minimum extents: x=" & $minX & " y=" & $minY
+
+map = newSeqWith(maxY - minY, newSeq[GridType](maxX - minX))
+
+proc draw() =
+  for y in minY..<maxY:
+    for x in minX..<maxX:
+      case map[y][x]:
+        of Sand:
+          stdout.write '.'
+        of Clay:
+          stdout.write '#'
+        of Wet:
+          stdout.write '~'
+
+draw()
