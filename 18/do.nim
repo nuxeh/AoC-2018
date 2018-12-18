@@ -115,6 +115,15 @@ proc tick(inputMap: var seq[seq[CellType]]) =
           if not (getOrDefault(n, LumberYard) >= 1 and getOrDefault(n, Trees) >= 1):
             col = OpenGround
 
+proc count(inputMap: var seq[seq[CellType]]): CountTable[CellType] =
+  result = initCountTable[CellType]()
+  for row in inputMap:
+    for col in row:
+      result.inc(col)
+
+# part 1: count wooded * numberyards
 for i in 0..<10:
   inputData.tick()
   draw()
+
+echo $inputData.count()
