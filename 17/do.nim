@@ -117,19 +117,16 @@ proc draw() =
           stdout.write '~'
     stdout.write '\n'
 
-draw()
-
 # initialise map
 map[0][500 - minX] = Spring
 for c in inputData:
   case c.kind:
     of Vertical:
-      echo $c
-      for y in c.ys[0]..<c.ys[1]:
-        echo $y & " " & $(c.xs[0] - minX)
+      for y in c.ys[0]..c.ys[1]:
         map[y][c.xs[0] - minX] = Clay
     of Horizontal:
-      discard
+      for x in c.xs[0]..c.xs[1]:
+        map[c.ys[0]][x - minX] = Clay
 
 draw()
 
