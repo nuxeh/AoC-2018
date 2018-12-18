@@ -21,6 +21,7 @@ import tables
 import sets
 import lists
 import typetraits
+import strformat
 
 var
   filename = ""
