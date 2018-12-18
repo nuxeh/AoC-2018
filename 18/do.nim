@@ -11,6 +11,7 @@ Options:
   --part2            Process for part 2.
   -s=<n> --stop=<n>  Stopping point. [default: 100]
   -p --plot          Plot a graph
+  --target=<n>       Target iteration to calculate
 """
 import re
 import docopt
@@ -144,8 +145,12 @@ var
   totCount = initCountTable[int]()
   X: seq[int]
   Y: seq[int]
+  run = false
+  sample = newSeq[int]()
+  sampleX = newSeq[int]()
+  i = 0
 
-for i in 0..<parseInt($args["--stop"]):
+while true:
   inputData2.tick()
 
   if args["--verbose"]:
@@ -160,9 +165,25 @@ for i in 0..<parseInt($args["--stop"]):
   Y.add(r)
   totCount.inc(r)
 
-  if getOrDefault(totCount, r) >= 10:
-    echo "found multiple duplication " & $r & " at " & $i
+  if getOrDefault(totCount, r) >= 20:
+    #echo "found multiple duplication " & $r & " at " & $i & " " & $getOrDefault(totCount, r)
+    run = true
+
+  if run:
+    if len(sample) < 200:
+      sampleX.add(i)
+      sample.add(r)
+    else:
+      break
+
+  inc(i)
+
+echo $sample
+plot sampleX, sample, "lumber x trees repeating region"
+discard readChar stdin
 
 if args["--plot"]:
   plot X, Y, "lumber x trees"
   discard readChar stdin
+
+
