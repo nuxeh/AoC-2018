@@ -5,10 +5,11 @@ Usage:
   do [options] [<input>]
 
 Options:
-  -h --help       Show this help message.
-  -v --verbose    Show extra information.
-  -t --test       Use test points
-  --part2         Process for part 2
+  -h --help          Show this help message.
+  -v --verbose       Show extra information.
+  -t --test          Use test points.
+  --part2            Process for part 2.
+  -s=<n> --stop=<n>  Stopping point. [default: 100]
 """
 import re
 import docopt
@@ -45,6 +46,7 @@ var
   file = newFileStream(filename, fmRead)
   line = ""
   inputData: seq[seq[CellType]]
+  inputData2: seq[seq[CellType]]
 
 if not isNil(file):
   while file.readLine(line):
@@ -61,6 +63,8 @@ if not isNil(file):
           echo fmt"unknown '{ch}'"
     inputData.add(row)
   file.close()
+
+deepCopy(inputData2, inputData)
 
 if args["--verbose"]:
   for e in inputData:
@@ -125,9 +129,22 @@ proc count(inputMap: var seq[seq[CellType]]): CountTable[CellType] =
 for i in 0..<10:
   inputData.tick()
   if args["--verbose"]:
+    echo $i
     draw()
-    echo ""
 
 var c = inputData.count()
 echo $c
 echo $(c.getOrDefault(LumberYard) * c.getOrDefault(Trees))
+
+# part 2: total after 1000000000 (1,000,000,000) minutes
+
+var
+  totCount = initCountTable[int]()
+
+for i in 0..<parseInt($args["--stop"]):
+  inputData2.tick()
+  if args["--verbose"]:
+    echo $i
+    draw()
+  var c = inputData2.count()
+  totCount.inc(c.getOrDefault(LumberYard) * c.getOrDefault(Trees))
