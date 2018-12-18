@@ -84,8 +84,6 @@ proc neighbours(inputMap: seq[seq[CellType]], yi, xi: int): CountTable[CellType]
 
   result = table
 
-echo "> " & $neighbours(inputData, 1, 1)
-
 proc draw() =
   for row in inputData:
     for col in row:
@@ -100,8 +98,8 @@ proc draw() =
 
 proc tick(inputMap: seq[seq[CellType]]): seq[seq[CellType]] =
   result = inputMap
-  for x, row in inputMap:
-    for y, col in row:
+  for y, row in inputMap:
+    for x, col in row:
       let
         n = inputMap.neighbours(y, x)
       case col:
