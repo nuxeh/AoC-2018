@@ -23,6 +23,7 @@ import sets
 import lists
 import typetraits
 import strformat
+import gnuplot
 
 var
   filename = ""
@@ -88,8 +89,8 @@ proc neighbours(inputMap: seq[seq[CellType]], yi, xi: int): CountTable[CellType]
 
   result = table
 
-proc draw() =
-  for row in inputData:
+proc draw(inputMap: seq[seq[CellType]]) =
+  for row in inputMap:
     for col in row:
       case col:
         of OpenGround:
@@ -130,7 +131,7 @@ for i in 0..<10:
   inputData.tick()
   if args["--verbose"]:
     echo $i
-    draw()
+    inputData.draw()
 
 var c = inputData.count()
 echo $c
@@ -140,11 +141,19 @@ echo $(c.getOrDefault(LumberYard) * c.getOrDefault(Trees))
 
 var
   totCount = initCountTable[int]()
+  X: seq[int]
+  Y: seq[int]
 
 for i in 0..<parseInt($args["--stop"]):
   inputData2.tick()
   if args["--verbose"]:
     echo $i
-    draw()
+    inputData2.draw()
   var c = inputData2.count()
-  totCount.inc(c.getOrDefault(LumberYard) * c.getOrDefault(Trees))
+  #echo $(c.getOrDefault(LumberYard) * c.getOrDefault(Trees))
+  X.add(i)
+  Y.add(c.getOrDefault(LumberYard) * c.getOrDefault(Trees))
+
+plot X, Y, "lumber x trees"
+
+discard readChar stdin
