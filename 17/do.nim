@@ -21,6 +21,7 @@ import tables
 import sets
 import lists
 import typetraits
+import strformat
 
 var
   filename = ""
@@ -97,10 +98,11 @@ echo "minimum extents: x=" & $minX & " y=" & $minY
 echo "w=" & $w & " h=" & $h
 
 proc draw() =
+  stdout.write '\t'
   for x, elem in map[0]:
-    stdout.write toHex(x mod 16) & " "
+    stdout.write fmt"{x mod 16:X}"
   stdout.write '\n'
-    
+
   for y, row in map:
     stdout.write $y & '\t'
     for x in row:
