@@ -48,7 +48,8 @@ type
     Sand,
     Clay,
     Spring,
-    Wet
+    StandingWater,
+    FallingWater
 
 var
   file = newFileStream(filename, fmRead)
@@ -118,7 +119,10 @@ proc draw() =
     stdout.write '\n'
 
 # initialise map
-map[0][500 - minX] = Spring
+var
+  springX = 500 - minX
+  springY = 0
+map[springY][springX] = Spring
 for c in inputData:
   case c.kind:
     of Vertical:
@@ -129,6 +133,19 @@ for c in inputData:
         map[c.ys[0]][x - minX] = Clay
 
 draw()
+
+proc fall(y, x: int) =
+  var
+    curX = x
+    curY = y
+  map[curY][curX] = FallingWater
+  if [Clay, StandingWater].contains(map[curY + 1][curX]):
+    fill(curY, curX)
+  else:
+    inc(curY)
+
+while true:
+  fall(springY, springX)
 
 # resizeable infinite grid lib
 # serde file loading

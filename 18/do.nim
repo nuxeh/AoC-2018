@@ -65,3 +65,28 @@ if not isNil(file):
 if args["--verbose"]:
   for e in inputData:
     echo $e
+
+let
+  height = len(inputData)
+  width = len(inputData[0])
+
+echo fmt"width={width} height={height}"
+
+proc neighbours(yi, xi: int): CountTable[CellType] =
+  var
+    table = initCountTable[CellType]()
+
+  for y in (yi - 1)..(yi + 1):
+    for x in (xi - 1)..(xi + 1):
+      if x >= 0 and y >= 0 and x < width and y < height:
+        table.inc(inputData[y][x])
+
+  table.inc(inputData[yi][xi], -1) # needs dec!
+
+  echo table
+  result = table
+
+discard neighbours(5, 5)
+discard neighbours(0, 0)
+discard neighbours(9, 9)
+discard neighbours(9, 8)
