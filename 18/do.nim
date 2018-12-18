@@ -201,4 +201,4 @@ for i, s in sample:
     period = i
 
 echo $period
-echo $(sample[(target - sampleX[0]) mod period])
+echo $(sample[(target - sampleX[0]) mod (period - 1)])
