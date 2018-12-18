@@ -149,6 +149,7 @@ var
   sample = newSeq[int]()
   sampleX = newSeq[int]()
   i = 0
+  stop = parseInt($args["--stop"])
 
 while true:
   inputData2.tick()
@@ -166,7 +167,6 @@ while true:
   totCount.inc(r)
 
   if getOrDefault(totCount, r) >= 20:
-    #echo "found multiple duplication " & $r & " at " & $i & " " & $getOrDefault(totCount, r)
     run = true
 
   if run:
@@ -174,16 +174,31 @@ while true:
       sampleX.add(i)
       sample.add(r)
     else:
-      break
+      if i > stop:
+        break
+
+  if i == stop:
+    echo "test value " & $r & " at " & $i
 
   inc(i)
 
 echo $sample
-plot sampleX, sample, "lumber x trees repeating region"
-discard readChar stdin
 
 if args["--plot"]:
+  plot sampleX, sample, "lumber x trees repeating region"
+  discard readChar stdin
+
   plot X, Y, "lumber x trees"
   discard readChar stdin
 
+var
+  first = sample[0]
+  period: int
+  target = parseInt($args["--target"])
 
+for i, s in sample:
+  if s == first:
+    period = i
+
+echo $period
+echo $(sample[(target - sampleX[0]) mod period])
