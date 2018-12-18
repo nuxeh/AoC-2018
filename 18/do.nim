@@ -10,6 +10,7 @@ Options:
   -t --test          Use test points.
   --part2            Process for part 2.
   -s=<n> --stop=<n>  Stopping point. [default: 100]
+  -p --plot          Plot a graph
 """
 import re
 import docopt
@@ -137,7 +138,7 @@ var c = inputData.count()
 echo $c
 echo $(c.getOrDefault(LumberYard) * c.getOrDefault(Trees))
 
-# part 2: total after 1000000000 (1,000,000,000) minutes
+# part 2: total after 1000000000 (1,000,000,000) seconds
 
 var
   totCount = initCountTable[int]()
@@ -146,14 +147,26 @@ var
 
 for i in 0..<parseInt($args["--stop"]):
   inputData2.tick()
+
   if args["--verbose"]:
     echo $i
     inputData2.draw()
-  var c = inputData2.count()
-  #echo $(c.getOrDefault(LumberYard) * c.getOrDefault(Trees))
+
+  var
+    c = inputData2.count()
+    r = c.getOrDefault(LumberYard) * c.getOrDefault(Trees)
+
+  echo $c
+
   X.add(i)
-  Y.add(c.getOrDefault(LumberYard) * c.getOrDefault(Trees))
+  Y.add(r)
+  totCount.inc(r)
 
-plot X, Y, "lumber x trees"
+  for k, v in totCount:
+    if v >= 2:
+      echo "found multiple duplication " & $k & " " & $v & " at " & $i
+      break
 
-discard readChar stdin
+if args["--plot"]:
+  plot X, Y, "lumber x trees"
+  discard readChar stdin
