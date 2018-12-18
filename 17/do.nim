@@ -89,9 +89,9 @@ var
   maxY = inputData.foldl(max(a, b.ys.foldl(max(a, b), 0)), 0)
   minX = inputData.foldl(min(a, b.xs.foldl(min(a, b), maxX)), maxX)
   minY = 0
-  map = newSeqWith(maxY - minY, newSeq[GridType](maxX - minX))
-  w = maxX - minX
-  h = maxY - minY
+  w = maxX - minX + 1
+  h = maxY - minY + 1
+  map = newSeqWith(h, newSeq[GridType](w))
 
 echo "maximum extents: x=" & $maxX & " y=" & $maxY
 echo "minimum extents: x=" & $minX & " y=" & $minY
@@ -130,6 +130,8 @@ for c in inputData:
         map[y][c.xs[0] - minX] = Clay
     of Horizontal:
       discard
+
+draw()
 
 # resizeable infinite grid lib
 # serde file loading
