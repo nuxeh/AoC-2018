@@ -82,11 +82,6 @@ proc neighbours(yi, xi: int): CountTable[CellType] =
         table.inc(inputData[y][x])
 
   table.inc(inputData[yi][xi], -1) # needs dec!
-  table.inc(Trees, 0)
-  table.inc(LumberYard, 0)
-  table.inc(OpenGround, 0)
-
-  echo table
   result = table
 
 discard neighbours(5, 5)
@@ -96,16 +91,17 @@ discard neighbours(9, 8)
 
 for x, row in inputData:
   for y, col in row:
+    let
+      n = neighbours(y, x)
     case col:
       of OpenGround:
-        if neighbours(y, x)[Trees] > 3:
+        if getOrDefault(n, Trees) > 3:
           inputData[y][x] = Trees
       of Trees:
-        if neighbours(y, x)[LumberYard] > 3:
+        if getOrDefault(n, LumberYard) > 3:
           inputData[y][x] = LumberYard
       of LumberYard:
-        let n = neighbours(y, x)
-        if n[LumberYard] > 1 and n[Trees] > 1:
+        if getOrDefault(n, LumberYard) > 1 and getOrDefault(n, Trees) > 1:
           discard
         else:
           inputData[y][x] = OpenGround
