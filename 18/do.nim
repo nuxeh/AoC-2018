@@ -124,6 +124,10 @@ proc count(inputMap: var seq[seq[CellType]]): CountTable[CellType] =
 # part 1: count wooded * numberyards
 for i in 0..<10:
   inputData.tick()
-  draw()
+  if args["--verbose"]:
+    draw()
+    echo ""
 
-echo $inputData.count()
+var c = inputData.count()
+echo $c
+echo $(c.getOrDefault(LumberYard) * c.getOrDefault(Trees))
