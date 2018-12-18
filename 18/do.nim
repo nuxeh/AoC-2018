@@ -79,15 +79,12 @@ proc neighbours(inputMap: seq[seq[CellType]], yi, xi: int): CountTable[CellType]
   for y in (yi - 1)..(yi + 1):
     for x in (xi - 1)..(xi + 1):
       if x >= 0 and y >= 0 and x < width and y < height:
-        if x != xi and y != yi:
-          table.inc(inputData[y][x])
-
-  echo table.len()
-  echo  $table
+        if not (x == xi and y == yi):
+          table.inc(inputMap[y][x])
 
   result = table
 
-echo "> " & $neighbours(inputData, 5, 5)
+echo "> " & $neighbours(inputData, 1, 1)
 
 proc draw() =
   for row in inputData:
