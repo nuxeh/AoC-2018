@@ -53,9 +53,9 @@ if not isNil(file):
       case ch:
         of '.':
           row.add(OpenGround)
-        of '|':
-          row.add(LumberYard)
         of '#':
+          row.add(LumberYard)
+        of '|':
           row.add(Trees)
         else:
           echo fmt"unknown '{ch}'"
@@ -93,9 +93,9 @@ proc draw() =
         of OpenGround:
           stdout.write '.'
         of Trees:
-          stdout.write '#'
-        of LumberYard:
           stdout.write '|'
+        of LumberYard:
+          stdout.write '#'
     stdout.write '\n'
 
 proc tick(inputMap: seq[seq[CellType]]): seq[seq[CellType]] =
@@ -112,12 +112,7 @@ proc tick(inputMap: seq[seq[CellType]]): seq[seq[CellType]] =
           if getOrDefault(n, LumberYard) >= 3:
             result[y][x] = LumberYard
         of LumberYard:
-          if getOrDefault(n, LumberYard) >= 1:
-            if getOrDefault(n, Trees) >= 1:
-              discard
-            else:
-              result[y][x] = OpenGround
-          else:
+          if not (getOrDefault(n, LumberYard) >= 1 and getOrDefault(n, Trees) >= 1):
             result[y][x] = OpenGround
 
 inputData = tick(inputData)
