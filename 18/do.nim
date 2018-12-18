@@ -108,8 +108,6 @@ proc tick(inputMap: var seq[seq[CellType]]) =
         of OpenGround:
           if getOrDefault(n, Trees) >= 3:
             col = Trees
-            echo $orig[y][x]
-            echo $inputMap[y][x]
         of Trees:
           if getOrDefault(n, LumberYard) >= 3:
             col = LumberYard
@@ -117,5 +115,6 @@ proc tick(inputMap: var seq[seq[CellType]]) =
           if not (getOrDefault(n, LumberYard) >= 1 and getOrDefault(n, Trees) >= 1):
             col = OpenGround
 
-inputData.tick()
-draw()
+for i in 0..<10:
+  inputData.tick()
+  draw()
