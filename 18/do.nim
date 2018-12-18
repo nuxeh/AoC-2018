@@ -84,10 +84,17 @@ proc neighbours(yi, xi: int): CountTable[CellType] =
   table.inc(inputData[yi][xi], -1) # needs dec!
   result = table
 
-discard neighbours(5, 5)
-discard neighbours(0, 0)
-discard neighbours(9, 9)
-discard neighbours(9, 8)
+proc draw() =
+  for row in inputData:
+    for col in row:
+      case col:
+        of OpenGround:
+          stdout.write '.'
+        of Trees:
+          stdout.write '#'
+        of LumberYard:
+          stdout.write '|'
+    stdout.write '\n'
 
 for x, row in inputData:
   for y, col in row:
@@ -105,3 +112,5 @@ for x, row in inputData:
           discard
         else:
           inputData[y][x] = OpenGround
+
+draw()
