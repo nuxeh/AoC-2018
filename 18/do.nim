@@ -156,16 +156,12 @@ for i in 0..<parseInt($args["--stop"]):
     c = inputData2.count()
     r = c.getOrDefault(LumberYard) * c.getOrDefault(Trees)
 
-  echo $c
-
   X.add(i)
   Y.add(r)
   totCount.inc(r)
 
-  for k, v in totCount:
-    if v >= 2:
-      echo "found multiple duplication " & $k & " " & $v & " at " & $i
-      break
+  if getOrDefault(totCount, r) >= 10:
+    echo "found multiple duplication " & $r & " at " & $i
 
 if args["--plot"]:
   plot X, Y, "lumber x trees"
