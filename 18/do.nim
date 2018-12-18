@@ -96,22 +96,26 @@ proc draw() =
           stdout.write '#'
     stdout.write '\n'
 
-proc tick(inputMap: seq[seq[CellType]]): seq[seq[CellType]] =
-  result = inputMap
-  for y, row in inputMap:
-    for x, col in row:
+proc tick(inputMap: var seq[seq[CellType]]) =
+  var
+    orig: seq[seq[CellType]]
+  deepCopy(orig, inputMap)
+  for y, row in mpairs(inputMap):
+    for x, col in mpairs(row):
       let
-        n = inputMap.neighbours(y, x)
+        n = orig.neighbours(y, x)
       case col:
         of OpenGround:
           if getOrDefault(n, Trees) >= 3:
-            result[y][x] = Trees
+            col = Trees
+            echo $orig[y][x]
+            echo $inputMap[y][x]
         of Trees:
           if getOrDefault(n, LumberYard) >= 3:
-            result[y][x] = LumberYard
+            col = LumberYard
         of LumberYard:
           if not (getOrDefault(n, LumberYard) >= 1 and getOrDefault(n, Trees) >= 1):
-            result[y][x] = OpenGround
+            col = OpenGround
 
-inputData = tick(inputData)
+inputData.tick()
 draw()
