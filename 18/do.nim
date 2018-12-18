@@ -72,17 +72,22 @@ let
 
 echo fmt"width={width} height={height}"
 
-proc neighbours(yi, xi: int): CountTable[CellType] =
+proc neighbours(inputMap: seq[seq[CellType]], yi, xi: int): CountTable[CellType] =
   var
     table = initCountTable[CellType]()
 
   for y in (yi - 1)..(yi + 1):
     for x in (xi - 1)..(xi + 1):
       if x >= 0 and y >= 0 and x < width and y < height:
-        table.inc(inputData[y][x])
+        if x != xi and y != yi:
+          table.inc(inputData[y][x])
 
-  table.inc(inputData[yi][xi], -1) # needs dec!
+  echo table.len()
+  echo  $table
+
   result = table
+
+echo "> " & $neighbours(inputData, 5, 5)
 
 proc draw() =
   for row in inputData:
@@ -96,21 +101,27 @@ proc draw() =
           stdout.write '|'
     stdout.write '\n'
 
-for x, row in inputData:
-  for y, col in row:
-    let
-      n = neighbours(y, x)
-    case col:
-      of OpenGround:
-        if getOrDefault(n, Trees) > 3:
-          inputData[y][x] = Trees
-      of Trees:
-        if getOrDefault(n, LumberYard) > 3:
-          inputData[y][x] = LumberYard
-      of LumberYard:
-        if getOrDefault(n, LumberYard) > 1 and getOrDefault(n, Trees) > 1:
-          discard
-        else:
-          inputData[y][x] = OpenGround
+proc tick(inputMap: seq[seq[CellType]]): seq[seq[CellType]] =
+  result = inputMap
+  for x, row in inputMap:
+    for y, col in row:
+      let
+        n = inputMap.neighbours(y, x)
+      case col:
+        of OpenGround:
+          if getOrDefault(n, Trees) >= 3:
+            result[y][x] = Trees
+        of Trees:
+          if getOrDefault(n, LumberYard) >= 3:
+            result[y][x] = LumberYard
+        of LumberYard:
+          if getOrDefault(n, LumberYard) >= 1:
+            if getOrDefault(n, Trees) >= 1:
+              discard
+            else:
+              result[y][x] = OpenGround
+          else:
+            result[y][x] = OpenGround
 
+inputData = tick(inputData)
 draw()
