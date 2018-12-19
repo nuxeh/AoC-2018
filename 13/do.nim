@@ -166,6 +166,9 @@ proc turn(s: Symbol, dir: int): Symbol =
     else:
       echo "invalid direction!"
 
+var
+  ticks = 0
+
 proc tick(): bool =
   #echo $carts
   carts.sort do (a, b: Cart) -> int:
@@ -226,10 +229,11 @@ proc tick(): bool =
         discard
         #echo "invalid symbol type: " & $map[cart.y][cart.x]
 
-  result = detect_collisions()
+    if detect_collisions():
+      echo "(mid-tick) tick=" & $ticks
+      quit(0)
 
-var
-  ticks = 0
+  result = detect_collisions()
 
 while true:
   if tick():
