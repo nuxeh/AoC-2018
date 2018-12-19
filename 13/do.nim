@@ -104,9 +104,9 @@ proc char_from_sym(s: Symbol): char =
       result = sym[0]
 
 proc draw() =
-  var colour = false
   for y, row in map:
     for x, col in row:
+      var colour = false
       var
         c = char_from_sym(col)
       for cart in carts:
@@ -114,9 +114,10 @@ proc draw() =
           c = char_from_sym(cart.cart_type)
           colour = true
       if colour:
-        setForegroundColor(fgGreen, true)
+        setForegroundColor(fgBlack, true)
+        setBackgroundColor(bgWhite)
         stdout.write c
-        setForegroundColor(fgDefault, false)
+        resetAttributes()
       else:
         stdout.write c
     stdout.write '\n'
