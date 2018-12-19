@@ -25,7 +25,7 @@ let args = docopt(doc, version = "0.1.0")
 type
   Cpu = object
     regs: seq[int]
-    pc: int64
+    pc: int
 
   OpcodeName = enum
     None,
@@ -60,8 +60,9 @@ var
   instrFile = newFileStream("input.txt", fmRead)
   line = ""
   program = newSeq[Opcode]()
+  pcReg = 1
 
-proc interpret(op: Opcode, cpu: var Cpu) =
+proc interpret(cpu: var Cpu, op: Opcode) =
   case op.opName:
     of Addr:
       cpu.regs[op.output] = cpu.regs[op.inputA] + cpu.regs[op.inputB]
@@ -129,7 +130,15 @@ cpu.regs.add(0)
 
 echo $cpu
 
-for o in program:
-  interpret(o, cpu)
+while true:
+  if cpu.pc < 0 or cpu.pc > len(program):
+    echo "program halted"
+    echo $cpu
+    quit(0)
+  else:
+    cpu.regs[pcReg] = cpu.pc
+    cpu.interpret(program[cpu.pc]) # exception
+    cpu.pc = cpu.regs[pcReg]
+  cpu.pc += 1
 
 echo $cpu
