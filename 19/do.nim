@@ -1,5 +1,5 @@
 let doc = """
-Advent of code 2018, day 16: Chronal Classification
+Advent of code 2018, day 19: Go With The Flow
 
 Usage:
   do [options] [<input>]
@@ -47,7 +47,7 @@ type
     Eqrr
 
   Opcode = object
-    op, inputA, inputB, output: int
+    inputA, inputB, output: int
     opName: OpcodeName
 
   Trace = object
@@ -57,34 +57,9 @@ type
     possibleOps: seq[OpcodeName]
 
 var
-  traceFile = newFileStream("trace.txt", fmRead)
-  instrFile = newFileStream("prog.txt", fmRead)
+  instrFile = newFileStream("input.txt", fmRead)
   line = ""
-  traces = newSeq[Trace]()
   program = newSeq[Opcode]()
-
-if not isNil(traceFile):
-  var
-    t: Trace
-    o: Opcode
-  while traceFile.readLine(line):
-    var
-      matches: array[4, string]
-    if match(line, re"^Before: \[(\d), (\d+), (\d+), (\d+)\]$", matches, 0):
-      t.initialState = matches.map(parseInt)
-    elif match(line, re"^After:  \[(\d+), (\d+), (\d+), (\d+)\]$", matches, 0):
-      t.finalState = matches.map(parseInt)
-      traces.add(t)
-    elif match(line, re"^(\d+) (\d+) (\d+) (\d+)$", matches, 0):
-      var matchesInt = matches.map(parseInt)
-      o.op = matchesInt[0]
-      o.inputA = matchesInt[1]
-      o.inputB = matchesInt[2]
-      o.output = matchesInt[3]
-      t.op = o
-  traceFile.close()
-
-echo "found " & $len(traces) & " traces"
 
 proc interpret(op: Opcode, cpu: var Cpu) =
   case op.opName:
@@ -123,92 +98,20 @@ proc interpret(op: Opcode, cpu: var Cpu) =
     else:
       discard
 
-# find all traces with candidate opcodes
-
-for t in mitems(traces):
-  var
-    cpu: Cpu
-    trace: Trace = t
-  for opcode in OpcodeName:
-    if opcode != None:
-      cpu.regs = t.initialState
-      trace.op.opName = opcode
-      interpret(trace.op, cpu)
-      if cpu.regs == t.finalState:
-        if args["--verbose"]:
-          echo "opcode matches " & $t.initialState & " -> " & $cpu.regs & " " & $opcode
-        t.possibleOps.add(opcode)
-
-# part 1: find traces with 3 or more possible opcodes
-
-var
-  moreThanThree = 0
-for t in traces:
-  if len(t.possibleOps) >= 3:
-    if args["--verbose"]:
-      echo $len(t.possibleOps) & " " & $t.possibleOps
-    inc(moreThanThree)
-
-echo $moreThanThree & " with more than 3 possible opcodes"
-
-# part 2: find mapping of opcode to integer opcode
-
-var
-  opTable = newTable[int, OpcodeName]()
-  opSets: seq[HashSet[int]]
-  opSetsTable = newTable[OpcodeName, HashSet[int]]()
-
-echo $opTable.type.name
-
-for o in OpcodeName:
-  if o == None:
-    continue
-  var
-    matches = initSet[int]()
-  for t in traces:
-    if t.possibleOps.contains(o):
-      matches.incl(t.op.op)
-  opSets.add(matches)
-  opSetsTable.add(o, matches)
-
-proc recursiveMinimise(opcode: int) =
-  for k, s in mpairs(opSetsTable):
-    s.excl(opcode)
-
-  for k, s in mpairs(opSetsTable):
-    if len(s) == 1:
-      let code = s.pop()
-      opTable.add(code, k)
-      recursiveMinimise(code)
-
-proc findRoot() =
-  for k, s in mpairs(opSetsTable):
-    echo $k & " " & $s
-    if len(s) == 1:
-      echo "length one"
-      echo s.type.name
-      echo s.hash()
-      let code = s.pop()
-      opTable.add(code, k)
-      recursiveMinimise(code)
-
-findRoot()
-echo $opSetsTable
-echo $opTable
-
 # load and run programme
 
 if not isNil(instrFile):
   var o: Opcode
   while instrFile.readLine(line):
     var matches: array[4, string]
-    if match(line, re"^(\d+) (\d+) (\d+) (\d+)$", matches, 0):
-      var matchesInt = matches.map(parseInt)
-      o.op = matchesInt[0]
-      o.inputA = matchesInt[1]
-      o.inputB = matchesInt[2]
-      o.output = matchesInt[3]
-      o.opName = opTable[o.op]
+    if match(line, re"^(.+) (\d+) (\d+) (\d+)$", matches, 0):
+      var matchesInt = matches[1..3].map(parseInt)
+      o.inputA = matchesInt[0]
+      o.inputB = matchesInt[1]
+      o.output = matchesInt[2]
+      for op in OpcodeName:
+        if toLowerAscii($op) == matches[0]:
+          o.opName = op
       program.add(o)
   instrFile.close()
 
@@ -217,6 +120,8 @@ echo "found " & $len(program) & " opcodes"
 var
   cpu: Cpu
 
+cpu.regs.add(0)
+cpu.regs.add(0)
 cpu.regs.add(0)
 cpu.regs.add(0)
 cpu.regs.add(0)
