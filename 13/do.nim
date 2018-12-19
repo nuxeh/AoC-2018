@@ -1,5 +1,5 @@
 let doc = """
-Advent of code 2018, day 13
+Advent of code 2018, day 13: Mine Cart Madness
 
 Usage:
   day{} [options] [<input>]
@@ -158,10 +158,14 @@ proc turn(s: Symbol, dir: int): Symbol =
     else:
       echo "invalid direction!"
 
-#proc move(self: ref Cart) =
-#  self.cart_type = junction
-
 proc tick(): bool =
+  carts.sort(proc (a, b: Cart): int =
+    result = 0
+    if a.y < b.y:
+      result = 1
+    elif a.x < b.x:
+      result = -1)
+
   for cart in mitems(carts):
     #cart.move()
     case cart.cart_type:
@@ -205,7 +209,8 @@ proc tick(): bool =
         cart.cart_type = turn(cart.cart_type, cart.junctions_encountered)
         cart.junctions_encountered = (cart.junctions_encountered + 1) mod 3
       else:
-        echo "invalid symbol type: " & $map[cart.y][cart.x]
+        discard
+        #echo "invalid symbol type: " & $map[cart.y][cart.x]
 
   result = detect_collisions()
 
