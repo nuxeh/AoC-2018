@@ -104,6 +104,7 @@ proc char_from_sym(s: Symbol): char =
       result = sym[0]
 
 proc draw() =
+  var colour = false
   for y, row in map:
     for x, col in row:
       var
@@ -111,7 +112,11 @@ proc draw() =
       for cart in carts:
         if cart.x == x and cart.y == y:
           c = char_from_sym(cart.cart_type)
-      stdout.write c
+          colour = true
+      if colour:
+        stdout.styledWrite([fgBright, fgGreen], $c)
+      else:
+        stdout.styledWrite(fgDefault, $c)
     stdout.write '\n'
 
 echo "found " & $len(carts) & " carts"
@@ -159,12 +164,18 @@ proc turn(s: Symbol, dir: int): Symbol =
       echo "invalid direction!"
 
 proc tick(): bool =
+  #echo $carts
   carts.sort do (a, b: Cart) -> int:
-    result = 0
     if a.y < b.y:
-      result = 1
+      result = -1
     elif a.x < b.x:
       result = -1
+    elif a.x == b.x and a.y == b.y:
+      result = 0
+    else:
+      result = 1
+  #echo $carts
+  #echo ""
 
   for cart in mitems(carts):
     #cart.move()
