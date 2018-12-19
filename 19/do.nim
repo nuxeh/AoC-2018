@@ -7,6 +7,7 @@ Usage:
 Options:
   -h --help       Show this help message.
   -v --verbose    Show extra information.
+  -2 --part2      Modify register initial state for part 2
 """
 import docopt
 import streams
@@ -128,10 +129,13 @@ cpu.regs.add(0)
 cpu.regs.add(0)
 cpu.regs.add(0)
 
+if args["--part2"]:
+  cpu.regs[0] = 1
+
 echo $cpu
 
 while true:
-  if cpu.pc < 0 or cpu.pc > len(program):
+  if cpu.pc < 0 or cpu.pc >= len(program):
     echo "program halted"
     echo $cpu
     quit(0)
