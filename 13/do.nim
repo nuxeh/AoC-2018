@@ -159,12 +159,12 @@ proc turn(s: Symbol, dir: int): Symbol =
       echo "invalid direction!"
 
 proc tick(): bool =
-  carts.sort(proc (a, b: Cart): int =
+  carts.sort do (a, b: Cart) -> int:
     result = 0
     if a.y < b.y:
       result = 1
     elif a.x < b.x:
-      result = -1)
+      result = -1
 
   for cart in mitems(carts):
     #cart.move()
