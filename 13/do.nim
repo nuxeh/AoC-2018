@@ -170,7 +170,6 @@ var
   ticks = 0
 
 proc tick(): bool =
-  #echo $carts
   carts.sort do (a, b: Cart) -> int:
     if a.y < b.y:
       result = -1
@@ -180,8 +179,6 @@ proc tick(): bool =
       result = 0
     else:
       result = 1
-  #echo $carts
-  #echo ""
 
   for cart in mitems(carts):
     #cart.move()
@@ -229,6 +226,7 @@ proc tick(): bool =
         discard
         #echo "invalid symbol type: " & $map[cart.y][cart.x]
 
+    # detect collisions (after each cart has moved)
     if detect_collisions():
       echo "(mid-tick) tick=" & $ticks
       quit(0)
