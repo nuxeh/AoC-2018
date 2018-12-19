@@ -19,6 +19,7 @@ import re
 import sequtils
 import sets
 import algorithm
+import lists
 
 var
   filename = ""
@@ -74,7 +75,7 @@ var
 
 var
   map: seq[seq[Symbol]]
-  carts: seq[Cart]
+  carts = initDoublyLinkedList[Cart]()
   r = 0
 
 if not isNil(file):
@@ -83,7 +84,7 @@ if not isNil(file):
     for c, ch in line:
       var s = sym_table[ch]
       if [cartUp, cartDown, cartLeft, cartRight].contains(s):
-        carts.add(
+        carts.prepend(
           Cart(
             cart_type: s,
             junctions_encountered: 0,
@@ -123,25 +124,30 @@ proc draw() =
         stdout.write c
     stdout.write '\n'
 
-echo "found " & $len(carts) & " carts"
+#echo "found " & $len(carts) & " carts"
 if args["--verbose"]:
   for cart in carts:
     echo $cart
   draw()
 
 proc detect_collisions(): bool =
-  for i, cartA in mpairs(carts):
-    for j, cartB in mpairs(carts):
-      if i != j and cartA.x == cartB.x and cartA.y == cartB.y:
-        echo "collision at " & $cartA.x & "," & $cartA.y & "!"
+  var
+    i, j: int
+  for cartA in nodes(carts):
+    for cartB in nodes(carts):
+      if i != j and cartA.value.x == cartB.value.x and cartA.value.y == cartB.value.y:
+        echo "collision at " & $cartA.value.x & "," & $cartA.value.y & "!"
 
         # remove carts
-        delete(carts, i)
-        delete(carts, j)
+        carts.remove(cartA)
+        carts.remove(cartB)
 
-        echo "number of carts left: " & $len(carts)
+        #echo "number of carts left: " & $len(carts)
 
         result = true
+
+      inc(j)
+    inc(i)
 
 proc turn(s: Symbol, dir: int): Symbol =
   case dir:
