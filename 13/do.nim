@@ -114,9 +114,11 @@ proc draw() =
           c = char_from_sym(cart.cart_type)
           colour = true
       if colour:
-        stdout.styledWrite([fgBright, fgGreen], $c)
+        setForegroundColor(fgGreen, true)
+        stdout.write c
+        setForegroundColor(fgDefault, false)
       else:
-        stdout.styledWrite(fgDefault, $c)
+        stdout.write c
     stdout.write '\n'
 
 echo "found " & $len(carts) & " carts"
