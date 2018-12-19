@@ -8,6 +8,7 @@ Options:
   -h --help       Show this help message.
   -v --verbose    Show extra information.
   -t --test       Use test points
+  -2 --part2      Modify for part 2
 """
 import docopt
 import streams
@@ -129,10 +130,17 @@ if args["--verbose"]:
   draw()
 
 proc detect_collisions(): bool =
-  for i, cartA in carts:
-    for j, cartB in carts:
+  for i, cartA in mpairs(carts):
+    for j, cartB in mpairs(carts):
       if i != j and cartA.x == cartB.x and cartA.y == cartB.y:
         echo "collision at " & $cartA.x & "," & $cartA.y & "!"
+
+        # remove carts
+        delete(carts, i)
+        delete(carts, j)
+
+        echo "number of carts left: " & $len(carts)
+
         result = true
 
 proc turn(s: Symbol, dir: int): Symbol =
@@ -229,14 +237,16 @@ proc tick(): bool =
     # detect collisions (after each cart has moved)
     if detect_collisions():
       echo "(mid-tick) tick=" & $ticks
-      quit(0)
+      if not args["--part2"]:
+        quit(0)
 
   result = detect_collisions()
 
 while true:
   if tick():
     echo "tick=" & $ticks
-    break
+    if not args["--part2"]:
+      break
   inc(ticks)
   if args["--verbose"]:
     draw()
