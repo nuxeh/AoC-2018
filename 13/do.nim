@@ -50,6 +50,7 @@ type
     junctions_encountered: int
     x: int
     y: int
+    destroyed: bool
 
 #static:
 var
@@ -129,16 +130,19 @@ if args["--verbose"]:
     echo $cart
   draw()
 
-proc detect_collisions(): seq[int] =
-  for i, cartA in carts:
-    for j, cartB in carts:
+proc detect_collisions(): bool =
+  for i, cartA in mpairs(carts):
+    if cartA.destroyed: continue
+    for j, cartB in mpairs(carts):
+      if cartB.destroyed: continue
       if i != j and cartA.x == cartB.x and cartA.y == cartB.y:
         echo "collision at " & $cartA.x & "," & $cartA.y & "!"
 
         # flag carts for removal
-        result.add(i)
-        result.add(j)
+        cartA.destroyed = true
+        cartB.destroyed = true
 
+        result = true
 
 proc turn(s: Symbol, dir: int): Symbol =
   case dir:
@@ -178,6 +182,7 @@ proc tick(): bool =
   var
     toRemove = newSeq[int]()
 
+  # sort carts by x and y positions
   carts.sort do (a, b: Cart) -> int:
     if a.y < b.y:
       result = -1
@@ -188,7 +193,10 @@ proc tick(): bool =
     else:
       result = 1
 
+  # move each cart
   for cart in mitems(carts):
+    if cart.destroyed: continue
+
     #cart.move()
     case cart.cart_type:
       of cartRight:
@@ -235,27 +243,35 @@ proc tick(): bool =
         #echo "invalid symbol type: " & $map[cart.y][cart.x]
 
     # detect collisions (after each cart has moved)
-    toRemove = detect_collisions()
+    if detect_collisions():
+      result = true
 
-  if len(toRemove) != 0:
-    echo "(mid-tick) tick=" & $ticks
-    if not args["--part2"]:
-      quit(0)
-
-  for collided in toRemove:
-    carts.delete(collided)
-
-  if len(toRemove) != 0:
-    echo "number of carts left: " & $len(carts)
-
-  result = len(toRemove) != 0
+    var
+      notDestroyed = 0
+    for cart in carts:
+      if cart.destroyed == false:
+        inc(notDestroyed)
+    if notDestroyed == 1:
+      for cart in carts:
+        if cart.destroyed == false:
+          echo $cart
 
 while true:
+  var
+    notDestroyed = 0
   if tick():
     echo "tick=" & $ticks
     if not args["--part2"]:
       break
-    if len(carts) == 1:
+    # count remaining carts
+    for cart in carts:
+      if cart.destroyed == false:
+        inc(notDestroyed)
+    echo $notDestroyed & " carts left"
+    if notDestroyed == 1:
+      for cart in carts:
+        if cart.destroyed == false:
+          echo $cart
       break
   inc(ticks)
   if args["--verbose"]:
