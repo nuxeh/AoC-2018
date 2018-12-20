@@ -129,19 +129,16 @@ if args["--verbose"]:
     echo $cart
   draw()
 
-proc detect_collisions(): bool =
-  for i, cartA in mpairs(carts):
-    for j, cartB in mpairs(carts):
+proc detect_collisions(): seq[int] =
+  for i, cartA in carts:
+    for j, cartB in carts:
       if i != j and cartA.x == cartB.x and cartA.y == cartB.y:
         echo "collision at " & $cartA.x & "," & $cartA.y & "!"
 
-        # remove carts
-        delete(carts, i)
-        delete(carts, j)
+        # flag carts for removal
+        result.add(i)
+        result.add(j)
 
-        echo "number of carts left: " & $len(carts)
-
-        result = true
 
 proc turn(s: Symbol, dir: int): Symbol =
   case dir:
@@ -178,6 +175,9 @@ var
   ticks = 0
 
 proc tick(): bool =
+  var
+    toRemove = newSeq[int]()
+
   carts.sort do (a, b: Cart) -> int:
     if a.y < b.y:
       result = -1
@@ -235,17 +235,27 @@ proc tick(): bool =
         #echo "invalid symbol type: " & $map[cart.y][cart.x]
 
     # detect collisions (after each cart has moved)
-    if detect_collisions():
-      echo "(mid-tick) tick=" & $ticks
-      if not args["--part2"]:
-        quit(0)
+    toRemove = detect_collisions()
 
-  result = detect_collisions()
+  if len(toRemove) != 0:
+    echo "(mid-tick) tick=" & $ticks
+    if not args["--part2"]:
+      quit(0)
+
+  for collided in toRemove:
+    carts.delete(collided)
+
+  if len(toRemove) != 0:
+    echo "number of carts left: " & $len(carts)
+
+  result = len(toRemove) != 0
 
 while true:
   if tick():
     echo "tick=" & $ticks
     if not args["--part2"]:
+      break
+    if len(carts) == 1:
       break
   inc(ticks)
   if args["--verbose"]:
