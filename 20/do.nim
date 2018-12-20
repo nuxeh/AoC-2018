@@ -36,13 +36,10 @@ if args["<input>"]:
   filename = $args["<input>"]
 
 type
-  ClayType = enum
-    Vertical,
-    Horizontal
-
-  Clay = object
-    kind: ClayType
-    x, x2, y, y2: int
+  SeqNode = ref object
+    parent: SeqNode
+    children: seq[SeqNode]
+    contents: string
 
 var
   file = newFileStream(filename, fmRead)
@@ -56,3 +53,25 @@ if not isNil(file):
 
 if args["--verbose"]:
   echo $inputData
+
+var matches: array[3, string]
+if match(inputData, re"^(\(.?\d+)$", matches, 0):
+  echo $matches
+
+proc addChild() =
+  discard
+
+var
+  root: SeqNode
+
+# iterate over characters
+for ch in inputData:
+  if ch == '^': continue
+
+  # new branch
+  if ch == '(':
+    discard
+
+  # close branch
+  if ch == ')':
+    discard
