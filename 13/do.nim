@@ -175,6 +175,18 @@ proc turn(s: Symbol, dir: int): Symbol =
     else:
       echo "invalid direction!"
 
+proc cartsLeft(): int =
+  var
+    notDestroyed = 0
+  for cart in carts:
+    if cart.destroyed == false:
+      inc(notDestroyed)
+  if notDestroyed == 1:
+    for cart in carts:
+      if cart.destroyed == false:
+        echo $cart
+  result = notDestroyed
+
 var
   ticks = 0
 
@@ -246,15 +258,7 @@ proc tick(): bool =
     if detect_collisions():
       result = true
 
-    var
-      notDestroyed = 0
-    for cart in carts:
-      if cart.destroyed == false:
-        inc(notDestroyed)
-    if notDestroyed == 1:
-      for cart in carts:
-        if cart.destroyed == false:
-          echo $cart
+    discard cartsLeft()
 
 while true:
   var
@@ -264,14 +268,9 @@ while true:
     if not args["--part2"]:
       break
     # count remaining carts
-    for cart in carts:
-      if cart.destroyed == false:
-        inc(notDestroyed)
+    notDestroyed = cartsLeft()
     echo $notDestroyed & " carts left"
-    if notDestroyed == 1:
-      for cart in carts:
-        if cart.destroyed == false:
-          echo $cart
+    if cartsLeft() == 1:
       break
   inc(ticks)
   if args["--verbose"]:
