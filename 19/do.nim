@@ -121,6 +121,8 @@ echo "found " & $len(program) & " opcodes"
 
 var
   cpu: Cpu
+  progLen = len(program)
+  maxInstr = progLen - 1
 
 cpu.regs.add(0)
 cpu.regs.add(0)
@@ -135,7 +137,7 @@ if args["--part2"]:
 echo $cpu
 
 while true:
-  if cpu.pc < 0 or cpu.pc >= len(program):
+  if cpu.pc < 0 or cpu.pc > maxInstr:
     echo "program halted"
     echo $cpu
     quit(0)
@@ -143,6 +145,7 @@ while true:
     cpu.regs[pcReg] = cpu.pc
     cpu.interpret(program[cpu.pc]) # exception
     cpu.pc = cpu.regs[pcReg]
+  #echo $cpu
   cpu.pc += 1
 
 echo $cpu
