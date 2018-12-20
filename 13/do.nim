@@ -184,6 +184,7 @@ proc cartsLeft(): int =
   if notDestroyed == 1:
     for cart in carts:
       if cart.destroyed == false:
+        stdout.write $cart.x & "," & $cart.y & " "
         echo $cart
   result = notDestroyed
 
@@ -259,6 +260,7 @@ proc tick(): bool =
       result = true
 
     discard cartsLeft()
+  discard cartsLeft()
 
 while true:
   var
@@ -271,6 +273,7 @@ while true:
     notDestroyed = cartsLeft()
     echo $notDestroyed & " carts left"
     if cartsLeft() == 1:
+      discard tick()
       break
   inc(ticks)
   if args["--verbose"]:
