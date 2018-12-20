@@ -259,22 +259,23 @@ proc tick(): bool =
     if detect_collisions():
       result = true
 
-    discard cartsLeft()
-  discard cartsLeft()
-
 while true:
   var
     notDestroyed = 0
+
+  # move all carts
   if tick():
     echo "tick=" & $ticks
     if not args["--part2"]:
       break
-    # count remaining carts
+
+    # count remaining carts (part 2)
     notDestroyed = cartsLeft()
     echo $notDestroyed & " carts left"
-    if cartsLeft() == 1:
-      discard tick()
+    if notDestroyed == 1:
       break
+
   inc(ticks)
+
   if args["--verbose"]:
     draw()
