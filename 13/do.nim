@@ -199,7 +199,7 @@ proc tick(): bool =
   carts.sort do (a, b: Cart) -> int:
     if a.y < b.y:
       result = -1
-    elif a.x < b.x:
+    elif a.y == b.y and a.x < b.x:
       result = -1
     elif a.x == b.x and a.y == b.y:
       result = 0
