@@ -68,13 +68,19 @@ for i, ch in inputData:
   if ch == '^': continue
   if ch == '$': break
 
+  if args["--verbose"]:
+    echo inputData
+    for j in 0..<i:
+      stdout.write ' '
+    echo '^'
+
   # open branch
   if ch == '(':
     add(curNode.branches, new SeqNode)
     curNode.branches[high(curNode.branches)].parent = curNode
     curNode = curNode.branches[high(curNode.branches)]
 
-  # close branch add a new node to the stem
+  # close branch
   elif ch == ')':
     curNode = curNode.parent
 
