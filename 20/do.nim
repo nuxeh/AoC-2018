@@ -49,6 +49,8 @@ if not isNil(file):
 if args["--verbose"]:
   echo $inputData
 
+# this is basically some frankenstein creation somewhere between a tree and a
+# doubly linked list, hmm
 type
   SeqNode = ref object
     next: SeqNode
@@ -64,6 +66,23 @@ var
   root: SeqNode = SeqNode()
   curNode = root
   lastCh: char
+
+proc `$`(a: SeqNode): string =
+  result = "[" & join(a.contents) & "]"
+
+proc printWithDepth(n: SeqNode, d: int) =
+  for i in 0..<d:
+    stdout.write ". "
+  echo $n
+
+proc drawTree(root: SeqNode, depth: int = 0) =
+  var
+    c = root
+  while c != nil:
+    printWithDepth(c, depth)
+    for b in c.branches:
+      drawTree(b, depth + 1)
+    c = c.next
 
 # iterate over characters
 for i, ch in inputData:
@@ -118,22 +137,7 @@ for i, ch in inputData:
 
   lastCh = ch
 
-proc `$`(a: SeqNode): string =
-  result = "[" & join(a.contents) & "]"
-
-proc printWithDepth(n: SeqNode, d: int) =
-  for i in 0..<d:
-    stdout.write ". "
-  echo $n
-
-proc drawTree(root: SeqNode, depth: int = 0) =
-  var
-    c = root
-  while c != nil:
-    printWithDepth(c, depth)
-    for b in c.branches:
-      drawTree(b, depth + 1)
-    c = c.next
+  drawTree(root)
 
 drawTree(root)
 
