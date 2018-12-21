@@ -49,7 +49,7 @@ type
     Clay,
     Spring,
     StandingWater,
-    FallingWater
+    DampSand
 
 var
   file = newFileStream(filename, fmRead)
@@ -114,7 +114,9 @@ proc draw() =
           stdout.write '#'
         of Spring:
           stdout.write '+'
-        of Wet:
+        of DampSand:
+          stdout.write '|'
+        of StandingWater:
           stdout.write '~'
     stdout.write '\n'
 
@@ -134,18 +136,30 @@ for c in inputData:
 
 draw()
 
+proc fill(y, x: int): bool =
+  discard
+#[
+  if map[y - 1][x] == EmptySpace:
+    return false
+  if map[y][x + 1] == EmptySpace:
+    return fill(y, x + 1)
+  if map[y][x - 1] == EmptySpace:
+    return fill(y, x - 1)
+  if map[y][x + 1) == Clay:
+    return true
+]#
+
 proc fall(y, x: int) =
   var
     curX = x
     curY = y
-  map[curY][curX] = FallingWater
-  if [Clay, StandingWater].contains(map[curY + 1][curX]):
-    fill(curY, curX)
-  else:
+  while not [Clay, StandingWater].contains(map[curY + 1][curX]):
+    map[curY][curX] = DampSand
     inc(curY)
 
 while true:
   fall(springY, springX)
+  draw()
 
 # resizeable infinite grid lib
 # serde file loading
