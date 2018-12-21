@@ -51,6 +51,7 @@ if args["--verbose"]:
 type
   SeqNode = ref object
     next: SeqNode
+    prev: SeqNode
     parent: SeqNode
     branches: seq[SeqNode]
     contents: seq[char]
@@ -86,7 +87,10 @@ for i, ch in inputData:
 
   # branch separator
   elif ch == '|':
-    curNode = curNode.parent
+    if curNode.parent != nil:
+      curNode = curNode.parent
+    else:
+      curNode = curNode.prev
     add(curNode.branches, new SeqNode)
     curNode.branches[high(curNode.branches)].parent = curNode
     curNode = curNode.branches[high(curNode.branches)]
@@ -94,7 +98,8 @@ for i, ch in inputData:
   # character
   else:
     if lastCh == ')':
-      var newNode = SeqNode()
+      var newNode = new SeqNode
+      newNode.prev = curNode
       curNode.next = newNode
       curNode = newNode
     curNode.contents.add(ch)
