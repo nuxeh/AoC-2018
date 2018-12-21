@@ -51,6 +51,7 @@ if args["--verbose"]:
 type
   SeqNode = ref object
     next: SeqNode
+    parent: SeqNode
     branches: seq[SeqNode]
     contents: seq[char]
 
@@ -58,7 +59,7 @@ proc addChild() =
   discard
 
 var
-  root: SeqNode = new SeqNode
+  root: SeqNode = SeqNode()
   curNode = root
 
 # iterate over characters
@@ -80,6 +81,4 @@ for i, ch in inputData:
 
   # character
   else:
-    echo $curNode.contents
-    #curNode.contents = initSeq[char]()
-    #curNode.contents.add(ch)
+    curNode.contents.add(ch)
