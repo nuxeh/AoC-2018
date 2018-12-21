@@ -35,12 +35,6 @@ else:
 if args["<input>"]:
   filename = $args["<input>"]
 
-type
-  SeqNode = ref object
-    parent: SeqNode
-    children: seq[SeqNode]
-    contents: string
-
 var
   file = newFileStream(filename, fmRead)
   line = ""
@@ -54,24 +48,38 @@ if not isNil(file):
 if args["--verbose"]:
   echo $inputData
 
-var matches: array[3, string]
-if match(inputData, re"^(\(.?\d+)$", matches, 0):
-  echo $matches
+type
+  SeqNode = ref object
+    next: SeqNode
+    branches: seq[SeqNode]
+    contents: seq[char]
 
 proc addChild() =
   discard
 
 var
-  root: SeqNode
+  root: SeqNode = new SeqNode
+  curNode = root
 
 # iterate over characters
-for ch in inputData:
+for i, ch in inputData:
   if ch == '^': continue
+  if ch == '$': break
 
-  # new branch
+  # open branch
   if ch == '(':
-    discard
+    add(curNode.branches, new SeqNode)
 
   # close branch
-  if ch == ')':
-    discard
+  elif ch == ')':
+    discard #node.addChild()
+
+  # branch separator
+  elif ch == '|':
+    add(curNode.branches, new SeqNode)
+
+  # character
+  else:
+    echo $curNode.contents
+    #curNode.contents = initSeq[char]()
+    #curNode.contents.add(ch)
