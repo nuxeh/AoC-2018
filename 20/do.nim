@@ -61,6 +61,7 @@ proc addChild() =
 var
   root: SeqNode = SeqNode()
   curNode = root
+  lastCh: char
 
 # iterate over characters
 for i, ch in inputData:
@@ -73,28 +74,37 @@ for i, ch in inputData:
     curNode.branches[high(curNode.branches)].parent = curNode
     curNode = curNode.branches[high(curNode.branches)]
 
-  # close branch
+  # close branch add a new node to the stem
   elif ch == ')':
     curNode = curNode.parent
 
   # branch separator
   elif ch == '|':
+    curNode = curNode.parent
     add(curNode.branches, new SeqNode)
     curNode.branches[high(curNode.branches)].parent = curNode
     curNode = curNode.branches[high(curNode.branches)]
 
   # character
   else:
+    if lastCh == ')':
+      var newNode = SeqNode()
+      curNode.next = newNode
+      curNode = newNode
     curNode.contents.add(ch)
+
+  lastCh = ch
 
 iterator items(a: SeqNode): SeqNode =
   var x = a
   while x != nil:
     yield x
+    for b in x.branches:
+      yield b
     x = x.next
 
 proc `$`(a: SeqNode): string =
-  result = "fooey"
+  result = join(a.contents)
 
 for n in root:
   echo $n
