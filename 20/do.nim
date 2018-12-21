@@ -77,9 +77,10 @@ for i, ch in inputData:
 
   # open branch
   if ch == '(':
-    add(curNode.branches, new SeqNode)
-    curNode.branches[high(curNode.branches)].parent = curNode
-    curNode = curNode.branches[high(curNode.branches)]
+    var newNode = new SeqNode
+    add(curNode.branches, newNode)
+    newNode.parent = curNode
+    curNode = newNode
 
   # close branch
   elif ch == ')':
@@ -91,9 +92,10 @@ for i, ch in inputData:
       curNode = curNode.parent
     else:
       curNode = curNode.prev
-    add(curNode.branches, new SeqNode)
-    curNode.branches[high(curNode.branches)].parent = curNode
-    curNode = curNode.branches[high(curNode.branches)]
+    var newNode = new SeqNode
+    add(curNode.branches, newNode)
+    newNode.parent = curNode
+    curNode = newNode
 
   # character
   else:
