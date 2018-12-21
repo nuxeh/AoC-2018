@@ -106,7 +106,7 @@ proc `$`(a: SeqNode): string =
 
 proc printWithDepth(n: SeqNode, d: int) =
   for i in 0..<d:
-    stdout.write '.'
+    stdout.write ". "
   echo $n
 
 proc drawTree(root: SeqNode, depth: int = 0) =
@@ -117,7 +117,6 @@ proc drawTree(root: SeqNode, depth: int = 0) =
     for b in c.branches:
       drawTree(b, depth + 1)
     c = c.next
-    c = nil
 
 drawTree(root)
 
