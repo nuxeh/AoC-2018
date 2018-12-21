@@ -70,15 +70,31 @@ for i, ch in inputData:
   # open branch
   if ch == '(':
     add(curNode.branches, new SeqNode)
+    curNode.branches[high(curNode.branches)].parent = curNode
+    curNode = curNode.branches[high(curNode.branches)]
 
   # close branch
   elif ch == ')':
-    discard #node.addChild()
+    curNode = curNode.parent
 
   # branch separator
   elif ch == '|':
     add(curNode.branches, new SeqNode)
+    curNode.branches[high(curNode.branches)].parent = curNode
+    curNode = curNode.branches[high(curNode.branches)]
 
   # character
   else:
     curNode.contents.add(ch)
+
+iterator items(a: SeqNode): SeqNode =
+  var x = a
+  while x != nil:
+    yield x
+    x = x.next
+
+proc `$`(a: SeqNode): string =
+  result = "fooey"
+
+for n in root:
+  echo $n
