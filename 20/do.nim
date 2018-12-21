@@ -101,6 +101,26 @@ for i, ch in inputData:
 
   lastCh = ch
 
+proc `$`(a: SeqNode): string =
+  result = "[" & join(a.contents) & "]"
+
+proc drawTree(root: SeqNode, depth: int = 0) =
+  var
+    c = root
+    d = depth + 1
+  while c != nil:
+    for i in 0..<d:
+      stdout.write ' '
+    echo $c
+    for b in c.branches:
+      for i in 0..<d:
+        stdout.write ' '
+      echo $b
+      drawTree(b, d)
+    c = c.next
+
+drawTree(root)
+
 iterator items(a: SeqNode): SeqNode =
   var x = a
   while x != nil:
@@ -109,8 +129,5 @@ iterator items(a: SeqNode): SeqNode =
       yield b
     x = x.next
 
-proc `$`(a: SeqNode): string =
-  result = join(a.contents)
-
-for n in root:
-  echo $n
+#for n in root:
+#  echo $n
