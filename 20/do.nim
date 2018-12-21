@@ -104,20 +104,20 @@ for i, ch in inputData:
 proc `$`(a: SeqNode): string =
   result = "[" & join(a.contents) & "]"
 
+proc printWithDepth(n: SeqNode, d: int) =
+  for i in 0..<d:
+    stdout.write '.'
+  echo $n
+
 proc drawTree(root: SeqNode, depth: int = 0) =
   var
     c = root
-    d = depth + 1
   while c != nil:
-    for i in 0..<d:
-      stdout.write ' '
-    echo $c
+    printWithDepth(c, depth)
     for b in c.branches:
-      for i in 0..<d:
-        stdout.write ' '
-      echo $b
-      drawTree(b, d)
+      drawTree(b, depth + 1)
     c = c.next
+    c = nil
 
 drawTree(root)
 
