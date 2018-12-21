@@ -7,8 +7,9 @@ Usage:
 Options:
   -h --help       Show this help message.
   -v --verbose    Show extra information.
-  -t --test       Use test points
-  --part2         Process for part 2
+  -s --vscroll    Use scrolling verbose output.
+  -t --test       Use test points.
+  --part2         Process for part 2.
 """
 import re
 import docopt
@@ -70,10 +71,19 @@ for i, ch in inputData:
   if ch == '$': break
 
   if args["--verbose"]:
-    echo inputData
-    for j in 0..<i:
-      stdout.write ' '
-    echo '^'
+    if args["--vscroll"]:
+      for j in (i - 39)..<(i + 39):
+        if j < 0 or j >= len(inputData):
+          stdout.write ' '
+        else:
+          stdout.write inputData[j]
+      echo "\n                                       ^"
+    else:
+      echo inputData
+      for j in 0..<i:
+        stdout.write ' '
+      echo '^'
+
 
   # open branch
   if ch == '(':
