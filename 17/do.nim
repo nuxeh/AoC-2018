@@ -149,17 +149,50 @@ proc fill(y, x: int): bool =
     return true
 ]#
 
+proc fall(y, x: int)
+
+proc spread(y, x: int) =
+  var
+    queue = newSeq[int]()
+    cx = x
+
+  echo "s" & $y
+
+  # spread right
+  while map[y][cx] != Clay:
+    map[y][cx] = DampSand
+    queue.add(cx)
+    if map[y + 1][cx] == Sand:
+      fall(y, cx)
+      break
+    inc(cx)
+
+  # spread left
+  cx = x
+  while map[y][cx] != Clay:
+    map[y][cx] = DampSand
+    queue.add(cx)
+    if map[y + 1][cx] == Sand:
+      fall(y, cx)
+      break
+    dec(cx)
+
+  # fill queue
+  for q in queue:
+    map[y][q] = StandingWater
+
 proc fall(y, x: int) =
   var
-    curX = x
     curY = y
-  while not [Clay, StandingWater].contains(map[curY + 1][curX]):
-    map[curY][curX] = DampSand
+  while not [Clay, StandingWater].contains(map[curY + 1][x]):
+    map[curY][x] = DampSand
     inc(curY)
+  spread(curY, x)
 
 while true:
   fall(springY, springX)
   draw()
+  break
 
 # resizeable infinite grid lib
 # serde file loading
