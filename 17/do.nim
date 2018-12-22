@@ -175,13 +175,14 @@ proc spread(y, x: int) =
   var
     wq = newSeq[int]() # water fill queue
     fq = newSeq[int]() # fall point queue
-    left, right: bool
+    left = spreadDir(y, x, Left, wq, fq)
+    right = spreadDir(y, x, Right, wq, fq)
+
   # fill with water
-  left = spreadDir(y, x, Left, wq, fq)
-  right = spreadDir(y, x, Right, wq, fq)
   if left and right:
     for w in wq:
       map[y][w] = StandingWater
+
   # fall from fall points
   for f in fq:
     fall(y, f)
