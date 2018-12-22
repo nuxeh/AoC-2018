@@ -151,7 +151,12 @@ proc fill(y, x: int): bool =
 
 proc fall(y, x: int)
 
-proc spread(y, x: int) =
+type
+  Dir = enum
+    Left,
+    Right
+
+proc spread(y, x: int, dir: Dir) =
   var
     queue = newSeq[int]()
     cx = x
@@ -167,19 +172,10 @@ proc spread(y, x: int) =
       echo "break"
       fall(y, cx)
       return
-    inc(cx)
-
-  # spread left
-  cx = x
-  while map[y][cx] != Clay:
-    echo "l" & $cx
-    map[y][cx] = DampSand
-    queue.add(cx)
-    if not [Clay, StandingWater].contains(map[y + 1][cx]):
-      echo "break"
-      fall(y, cx)
-      return
-    dec(cx)
+    if dir == Left:
+      dec(cx)
+    else:
+      inc(cx)
 
   # fill queue
   for q in queue:
@@ -194,7 +190,8 @@ proc fall(y, x: int) =
     map[curY][x] = DampSand
     if curY >= maxY:
       return
-  spread(curY, x)
+  spread(curY, x, Left)
+  spread(curY, x, Right)
 
 for i in 0..20:
   fall(springY, springX)
