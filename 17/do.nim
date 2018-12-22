@@ -154,7 +154,7 @@ type
     Left,
     Right
 
-proc spread(y, x: int, dir: Dir) =
+proc spread(y, x: int, dir: Dir, other: bool): bool =
   var
     queue = newSeq[int]()
     cx = x
@@ -165,15 +165,18 @@ proc spread(y, x: int, dir: Dir) =
     queue.add(cx)
     if not [Clay, StandingWater].contains(map[y + 1][cx]):
       fall(y, cx)
-      return
+      return false
     if dir == Left:
       dec(cx)
     else:
       inc(cx)
 
   # fill queue
-  for q in queue:
-    map[y][q] = StandingWater
+  if other:
+    for q in queue:
+      map[y][q] = StandingWater
+
+  return true
 
 proc fall(y, x: int) =
   var
@@ -183,8 +186,7 @@ proc fall(y, x: int) =
     map[curY][x] = DampSand
     if curY >= maxY:
       return
-  spread(curY, x, Left)
-  spread(curY, x, Right)
+  discard spread(curY, x, Right, spread(curY, x, Left, false))
 
 proc count(): int =
   for y, row in map:
@@ -193,6 +195,7 @@ proc count(): int =
         inc(result)
 
 var lastCount: int
+var lastCountCount: int
 
 while true:
   var c: int
@@ -200,9 +203,11 @@ while true:
   if args["--verbose"]:
     draw()
   c = count()
-  if c == lastCount:
+  if c == lastCount and lastCountCount < 10:
+    inc(lastCountCount)
+  if c == lastCount and lastCountCount == 10:
     echo "wet count: " & $c
-    break
+    #break
   lastCount = c
 
 # resizeable infinite grid lib
