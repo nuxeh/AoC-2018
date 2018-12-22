@@ -189,10 +189,9 @@ proc fall(y, x: int) =
     inc(curY)
   spread(curY, x)
 
-while true:
+for i in 0..10:
   fall(springY, springX)
   draw()
-  break
 
 # resizeable infinite grid lib
 # serde file loading
