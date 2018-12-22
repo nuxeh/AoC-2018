@@ -195,7 +195,6 @@ proc count(): int =
         inc(result)
 
 var lastCount: int
-var lastCountCount: int
 
 while true:
   var c: int
@@ -203,11 +202,9 @@ while true:
   if args["--verbose"]:
     draw()
   c = count()
-  if c == lastCount and lastCountCount < 10:
-    inc(lastCountCount)
-  if c == lastCount and lastCountCount == 10:
+  if c == lastCount:
     echo "wet count: " & $c
-    #break
+    break
   lastCount = c
 
 # resizeable infinite grid lib
