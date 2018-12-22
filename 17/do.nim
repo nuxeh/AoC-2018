@@ -189,13 +189,14 @@ proc fall(y, x: int) =
   var
     curY = y
   while not [Clay, StandingWater].contains(map[curY + 1][x]):
-    map[curY][x] = DampSand
+    echo "Y" & $curY
     inc(curY)
-    if curY > maxY:
-      break
+    map[curY][x] = DampSand
+    if curY >= maxY:
+      return
   spread(curY, x)
 
-for i in 0..10:
+for i in 0..20:
   fall(springY, springX)
   draw()
 
