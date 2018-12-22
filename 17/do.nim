@@ -160,21 +160,25 @@ proc spread(y, x: int) =
 
   # spread right
   while map[y][cx] != Clay:
+    echo "r" & $cx
     map[y][cx] = DampSand
     queue.add(cx)
     if map[y + 1][cx] == Sand:
+      echo "break"
       fall(y, cx)
-      break
+      return
     inc(cx)
 
   # spread left
   cx = x
   while map[y][cx] != Clay:
+    echo "l" & $cx
     map[y][cx] = DampSand
     queue.add(cx)
     if map[y + 1][cx] == Sand:
+      echo "break"
       fall(y, cx)
-      break
+      return
     dec(cx)
 
   # fill queue
@@ -187,6 +191,8 @@ proc fall(y, x: int) =
   while not [Clay, StandingWater].contains(map[curY + 1][x]):
     map[curY][x] = DampSand
     inc(curY)
+    if curY > maxY:
+      break
   spread(curY, x)
 
 for i in 0..10:
