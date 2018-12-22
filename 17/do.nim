@@ -176,7 +176,7 @@ proc spread(y, x: int) =
     wq = newSeq[int]() # water fill queue
     fq = newSeq[int]() # fall point queue
   # fill with water
-  if spreadDir(y, x, Right, wq, fq) and spreadDir(y, x, Left, wq, fq):
+  if spreadDir(y, x, Left, wq, fq) and spreadDir(y, x, Right, wq, fq):
     for w in wq:
       map[y][w] = StandingWater
   # fall from fall points
