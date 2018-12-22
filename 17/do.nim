@@ -163,7 +163,7 @@ proc spread(y, x: int) =
     echo "r" & $cx
     map[y][cx] = DampSand
     queue.add(cx)
-    if map[y + 1][cx] == Sand:
+    if not [Clay, StandingWater].contains(map[y + 1][cx]):
       echo "break"
       fall(y, cx)
       return
@@ -175,7 +175,7 @@ proc spread(y, x: int) =
     echo "l" & $cx
     map[y][cx] = DampSand
     queue.add(cx)
-    if map[y + 1][cx] == Sand:
+    if not [Clay, StandingWater].contains(map[y + 1][cx]):
       echo "break"
       fall(y, cx)
       return
