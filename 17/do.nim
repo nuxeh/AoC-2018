@@ -8,7 +8,7 @@ Options:
   -h --help       Show this help message.
   -v --verbose    Show extra information.
   -t --test       Use test points
-  --part2         Process for part 2
+  -f --final      Draw final map
 """
 import re
 import docopt
@@ -208,13 +208,17 @@ var lastCount: int
 while true:
   var c: int
   fall(springY, springX)
+  c = count()
   if args["--verbose"]:
     draw()
-  c = count()
+    echo "wet count: " & $c
   if c == lastCount:
     echo "wet count: " & $c
     break
   lastCount = c
+
+if args["--final"]:
+  draw()
 
 # resizeable infinite grid lib
 # serde file loading
