@@ -134,8 +134,6 @@ for c in inputData:
       for x in c.xs[0]..c.xs[1]:
         map[c.ys[0]][x - minX] = Clay
 
-draw()
-
 proc fill(y, x: int): bool =
   discard
 #[
@@ -194,12 +192,18 @@ proc count(): int =
       if [StandingWater, DampSand].contains(col):
         inc(result)
 
-var lastCount = 0
+var lastCount: int
 
-for i in 0..20:
+while true:
+  var c: int
   fall(springY, springX)
-  draw()
-  echo $count()
+  if args["--verbose"]:
+    draw()
+  c = count()
+  if c == lastCount:
+    echo "wet count: " & $c
+    break
+  lastCount = c
 
 # resizeable infinite grid lib
 # serde file loading
