@@ -161,15 +161,11 @@ proc spread(y, x: int, dir: Dir) =
     queue = newSeq[int]()
     cx = x
 
-  echo "s" & $y
-
   # spread right
   while map[y][cx] != Clay:
-    echo "r" & $cx
     map[y][cx] = DampSand
     queue.add(cx)
     if not [Clay, StandingWater].contains(map[y + 1][cx]):
-      echo "break"
       fall(y, cx)
       return
     if dir == Left:
@@ -185,7 +181,6 @@ proc fall(y, x: int) =
   var
     curY = y
   while not [Clay, StandingWater].contains(map[curY + 1][x]):
-    echo "Y" & $curY
     inc(curY)
     map[curY][x] = DampSand
     if curY >= maxY:
@@ -193,9 +188,18 @@ proc fall(y, x: int) =
   spread(curY, x, Left)
   spread(curY, x, Right)
 
+proc count(): int =
+  for y, row in map:
+    for x, col in row:
+      if [StandingWater, DampSand].contains(col):
+        inc(result)
+
+var lastCount = 0
+
 for i in 0..20:
   fall(springY, springX)
   draw()
+  echo $count()
 
 # resizeable infinite grid lib
 # serde file loading
