@@ -154,29 +154,34 @@ type
     Left,
     Right
 
-proc spread(y, x: int, dir: Dir, other: bool): bool =
+proc spreadDir(y, x: int, dir: Dir,
+  wqueue: var seq[int], fqueue: var seq[int]): bool =
   var
-    queue = newSeq[int]()
     cx = x
-
-  # spread right
-  while map[y][cx] != Clay:
+  while map[y][cx] != Clay and cx > 0 and cx < maxX:
     map[y][cx] = DampSand
-    queue.add(cx)
+    wqueue.add(cx)
+    # if cell below is not contained, add a fall point to the queue
     if not [Clay, StandingWater].contains(map[y + 1][cx]):
-      fall(y, cx)
+      fqueue.add(cx)
       return false
     if dir == Left:
       dec(cx)
     else:
       inc(cx)
+  result = true
 
-  # fill queue
-  if other:
-    for q in queue:
-      map[y][q] = StandingWater
-
-  return true
+proc spread(y, x: int) =
+  var
+    wq = newSeq[int]() # water fill queue
+    fq = newSeq[int]() # fall point queue
+  # fill with water
+  if spreadDir(y, x, Right, wq, fq) and spreadDir(y, x, Left, wq, fq):
+    for w in wq:
+      map[y][w] = StandingWater
+  # fall from fall points
+  for f in fq:
+    fall(y, f)
 
 proc fall(y, x: int) =
   var
@@ -186,7 +191,7 @@ proc fall(y, x: int) =
     map[curY][x] = DampSand
     if curY >= maxY:
       return
-  discard spread(curY, x, Right, spread(curY, x, Left, false))
+  spread(curY, x)
 
 proc count(): int =
   for y, row in map:
