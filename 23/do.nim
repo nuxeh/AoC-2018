@@ -71,7 +71,11 @@ if args["--verbose"]:
 proc manhattan3D(a, b: Xyz): int =
   result = abs(a.x - b.x) + abs(a.y - b.y) + abs(a.z - b.z)
 
+# TODO: need a way to fold/map with a function, on a seq
+
 var
-  largestRadius = inputData.foldl do (a, b: Nanobot) -> Nanobot:
-    result = if a.radius > b.radius: a
-      else: b
+  largestRadNano = inputData.foldl(
+    if a.radius > b.radius: a
+    else: b)
+
+echo "bot with largest radius: " & $largestRadNano
