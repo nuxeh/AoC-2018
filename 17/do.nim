@@ -86,9 +86,9 @@ if args["--verbose"]:
     echo $e
 
 var
-  maxX = inputData.foldl(max(a, b.xs.foldl(max(a, b), 0)), 0) + 5
+  maxX = inputData.foldl(max(a, b.xs.foldl(max(a, b), 0)), 0) + 1
   maxY = inputData.foldl(max(a, b.ys.foldl(max(a, b), 0)), 0)
-  minX = inputData.foldl(min(a, b.xs.foldl(min(a, b), maxX)), maxX) - 5
+  minX = inputData.foldl(min(a, b.xs.foldl(min(a, b), maxX)), maxX) - 1
   minY = 0
   w = maxX - minX + 1
   h = maxY - minY + 1
@@ -158,13 +158,14 @@ proc spreadDir(y, x: int, dir: Dir,
   wqueue: var seq[int], fqueue: var seq[int]): bool =
   var
     cx = x
-  while map[y][cx] != Clay and cx > 0 and cx < maxX:
+  while map[y][cx] != Clay:
     map[y][cx] = DampSand
     wqueue.add(cx)
     # if cell below is not contained, add a fall point to the queue
     if not [Clay, StandingWater].contains(map[y + 1][cx]):
       fqueue.add(cx)
       return false
+    # increment or decrement depending on current direction
     if dir == Left:
       dec(cx)
     else:
