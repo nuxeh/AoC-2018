@@ -67,3 +67,11 @@ if not isNil(file):
 if args["--verbose"]:
   for e in inputData:
     echo $e
+
+proc manhattan3D(a, b: Xyz): int =
+  result = abs(a.x - b.x) + abs(a.y - b.y) + abs(a.z - b.z)
+
+var
+  largestRadius = inputData.foldl do (a, b: Nanobot) -> Nanobot:
+    result = if a.radius > b.radius: a
+      else: b
