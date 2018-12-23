@@ -77,5 +77,12 @@ var
   largestRadNano = inputData.foldl(
     if a.radius > b.radius: a
     else: b)
+  inRange = newSeq[Nanobot]()
 
 echo "bot with largest radius: " & $largestRadNano
+
+for bot in inputData:
+  if manhattan3D(bot.coords, largestRadNano.coords) <= largestRadNano.radius:
+    inRange.add(bot)
+
+echo $inRange.len
