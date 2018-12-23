@@ -51,7 +51,7 @@ var
 if not isNil(file):
   while file.readLine(line):
     var matches: array[4, string]
-    if match(line, re"^pos=<(\d+),(\d+),(\d+)>, r=(\d+)$", matches, 0):
+    if match(line, re"^pos=<(-*\d+),(-*\d+),(-*\d+)>, r=(\d+)$", matches, 0):
       var
         e: Nanobot
         i = matches.map(parseInt)
@@ -67,6 +67,8 @@ if not isNil(file):
 if args["--verbose"]:
   for e in inputData:
     echo $e
+
+echo "found " & $inputData.len & " nanobots"
 
 proc manhattan3D(a, b: Xyz): int =
   result = abs(a.x - b.x) + abs(a.y - b.y) + abs(a.z - b.z)
